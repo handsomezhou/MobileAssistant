@@ -23,6 +23,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="com.handsomezhou.mobileassistant.broadcast.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.handsomezhou.mobileassistant.service.MobileAssistantService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.handsomezhou.mobileassistant.service.MOBILE_ASSISTANT_SERVICE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

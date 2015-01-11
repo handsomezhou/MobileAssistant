@@ -1,21 +1,27 @@
 package com.handsomezhou.mobileassistant.activity;
 
-import com.handsomezhou.mobileassistant.R;
-import com.handsomezhou.mobileassistant.R.id;
-import com.handsomezhou.mobileassistant.R.layout;
-import com.handsomezhou.mobileassistant.R.menu;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.handsomezhou.mobileassistant.R;
+import com.handsomezhou.mobileassistant.service.MobileAssistantService;
 
 public class MainActivity extends Activity {
-
+	private static final String TAG="MainActivity";
+	private Button mStartServiceBtn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		initData();
+		initView();
+		initListener();
 	}
 
 	@Override
@@ -36,4 +42,28 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	private void initData(){
+	
+		return;
+	}
+	
+	private void initView(){
+		mStartServiceBtn=(Button)findViewById(R.id.start_service_btn);
+		return;
+	}
+	
+	private void initListener(){
+		mStartServiceBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent  intent=new Intent(MainActivity.this, MobileAssistantService.class);
+				intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
+				startService(intent);
+			}
+		});
+		return;
+	}
+	
 }
