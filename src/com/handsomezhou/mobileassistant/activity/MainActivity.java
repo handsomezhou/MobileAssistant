@@ -1,4 +1,9 @@
-package com.handsomezhou.mobileassistant;
+package com.handsomezhou.mobileassistant.activity;
+
+import com.handsomezhou.mobileassistant.R;
+import com.handsomezhou.mobileassistant.R.id;
+import com.handsomezhou.mobileassistant.R.layout;
+import com.handsomezhou.mobileassistant.R.menu;
 
 import android.app.Activity;
 import android.os.Bundle;
