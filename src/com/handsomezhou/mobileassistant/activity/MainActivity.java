@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.service.MobileAssistantService;
+import com.handsomezhou.mobileassistant.util.CallRecordHelper;
 
 public class MainActivity extends Activity {
 	private static final String TAG="MainActivity";
@@ -58,9 +59,11 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent  intent=new Intent(MainActivity.this, MobileAssistantService.class);
-				intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
-				startService(intent);
+//				Intent  intent=new Intent(MainActivity.this, MobileAssistantService.class);
+//				intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
+//				startService(intent);
+				
+				CallRecordHelper.getInstance().startLoadCallRecord();
 			}
 		});
 		return;
