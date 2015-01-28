@@ -87,8 +87,9 @@ public class CallRecordHelper {
 		
 		CallRecord cr=null;
 		Cursor cursor=null;
-
-		cursor=context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null,  CallLog.Calls.DEFAULT_SORT_ORDER);
+		 String[] projection=new String[]{CallLog.Calls._ID,CallLog.Calls.CACHED_NAME,CallLog.Calls.NUMBER,CallLog.Calls.TYPE,CallLog.Calls.DATE,CallLog.Calls.DURATION,};
+		long startLoadTime=System.currentTimeMillis();
+		cursor=context.getContentResolver().query(CallLog.Calls.CONTENT_URI, projection, null, null,  CallLog.Calls.DEFAULT_SORT_ORDER);
 		
 		int idIndex=cursor.getColumnIndex(CallLog.Calls._ID);
 		int nameIndex=cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
@@ -113,7 +114,8 @@ public class CallRecordHelper {
 			cursor.close();
 			cursor=null;
 		}
-		
+		long endLoadTime=System.currentTimeMillis();
+		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"]");
 		return callRecords;
 	}
 	
