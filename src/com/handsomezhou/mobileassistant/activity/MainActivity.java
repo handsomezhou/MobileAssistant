@@ -59,9 +59,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-//				Intent  intent=new Intent(MainActivity.this, MobileAssistantService.class);
-//				intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
-//				startService(intent);
+				Intent  intent=new Intent(MainActivity.this, MobileAssistantService.class);
+				intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
+				startService(intent);
 				
 				CallRecordHelper.getInstance().startLoadCallRecord();
 			}
