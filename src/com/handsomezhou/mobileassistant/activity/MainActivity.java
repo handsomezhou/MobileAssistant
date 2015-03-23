@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.service.MobileAssistantService;
 import com.handsomezhou.mobileassistant.util.CallRecordHelper;
+import com.handsomezhou.mobileassistant.util.ContactsHelper;
 
 public class MainActivity extends Activity {
 	private static final String TAG="MainActivity";
@@ -64,6 +65,7 @@ public class MainActivity extends Activity {
 				startService(intent);
 				
 				CallRecordHelper.getInstance().startLoadCallRecord();
+				ContactsHelper.getInstance().startLoadContacts();
 			}
 		});
 		return;
