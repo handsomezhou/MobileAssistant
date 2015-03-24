@@ -83,7 +83,7 @@ public class CallRecordHelper {
 	}
 	
 	private List<CallRecord> loadCallRecord(Context context){
-		List<CallRecord> callRecords=new ArrayList<>();
+		List<CallRecord> callRecords=new ArrayList<CallRecord>();
 		
 		CallRecord cr=null;
 		Cursor cursor=null;
@@ -115,7 +115,7 @@ public class CallRecordHelper {
 			cursor=null;
 		}
 		long endLoadTime=System.currentTimeMillis();
-		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"]");
+		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"]callRecords.size()["+callRecords.size()+"]");
 		return callRecords;
 	}
 	

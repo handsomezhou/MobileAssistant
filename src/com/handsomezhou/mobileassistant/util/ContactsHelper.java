@@ -719,7 +719,7 @@ public class ContactsHelper {
 		}
 	
 		long endLoadTime=System.currentTimeMillis();
-		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"] contacts.size()="+contacts.size());
+		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"] contacts.size()=["+contacts.size()+"]");
 		
 		return contacts;
 	}
@@ -731,7 +731,8 @@ public class ContactsHelper {
 			}
 			return;
 		}
-
+		
+		mBaseContacts.clear();//clear all base contacts
 		for (Contacts contact : contacts) {
 			if (!mBaseContacts.contains(contact)) {
 				mBaseContacts.add(contact);
