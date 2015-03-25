@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.provider.CallLog;
 import android.util.Log;
 
@@ -14,14 +15,13 @@ import com.handsomezhou.mobileassistant.model.CallRecord;
 
 
 public class CallRecordHelper {
-	private static final String TAG="CallLogHelper";
+	private static final String TAG="CallRecordHelper";
 	private Context mContext;
 	private static CallRecordHelper mInstance = null;
 	private List<CallRecord> mBaseCallRecord=null;
 	private AsyncTask<Object, Object, List<CallRecord>> mLoadTask = null;
 	private OnCallLogLoad mOnCallLogLoad;
-	
-	
+	private static boolean mCallLogChanged=true;
 
 	public interface OnCallLogLoad{
 		void onCallLogLoadSuccess();
@@ -34,6 +34,10 @@ public class CallRecordHelper {
 		}
 
 		return mInstance;
+	}
+	
+	private CallRecordHelper(){
+		initCallRecordHelper();
 	}
 	
 	public List<CallRecord> getBaseCallRecord() {
@@ -52,7 +56,23 @@ public class CallRecordHelper {
 		mOnCallLogLoad = onCallLogLoad;
 	}
 	
+	public  boolean isCallLogChanged() {
+		return mCallLogChanged;
+	}
+
+	public  void setCallLogChanged(boolean mCallLogChanged) {
+		CallRecordHelper.mCallLogChanged = mCallLogChanged;
+	}
+	
 	public boolean startLoadCallRecord(){
+		if(false==isCallLogChanged()){
+			return false;
+		}
+		
+		if(true==isSearching()){
+			return false;
+		}
+		
 		mLoadTask = new AsyncTask<Object, Object, List<CallRecord>>() {
 
 			@Override
@@ -63,8 +83,9 @@ public class CallRecordHelper {
 			@Override
 			protected void onPostExecute(List<CallRecord> result) {
 				parseCallRecord(result);
-				super.onPostExecute(result);
+				setCallLogChanged(false);
 				mLoadTask = null;
+				super.onPostExecute(result);
 			}
 		}.execute();
 
@@ -72,14 +93,15 @@ public class CallRecordHelper {
 
 	}
 	
-	private CallRecordHelper(){
-		initCallRecordHelper();
-	}
-	
 	private void initCallRecordHelper(){
 		mContext=MobileAssistantApplication.getContextObject();
 		setBaseCallRecord(new ArrayList<CallRecord>());
+		setCallLogChanged(true);
 		return;
+	}
+	
+	private boolean isSearching() {
+		return (mLoadTask != null && mLoadTask.getStatus() == Status.RUNNING);
 	}
 	
 	private List<CallRecord> loadCallRecord(Context context){
@@ -144,6 +166,6 @@ public class CallRecordHelper {
 			return;
 		}
 		
-		Log.i(TAG, "["+callRecord.getId()+"]["+callRecord.getName()+"]["+callRecord.getNumber()+"]["+callRecord.getType()+"]["+callRecord.getDate()+"]["+callRecord.getDuration()+"]");
+		Log.i(TAG, "["+callRecord.getContacts().getId()+"]["+callRecord.getContacts().getName()+"]["+callRecord.getContacts().getPhoneNumber()+"]["+callRecord.getType()+"]["+callRecord.getDate()+"]["+callRecord.getDuration()+"]");
 	}
 }

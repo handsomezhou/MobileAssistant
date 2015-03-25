@@ -26,6 +26,15 @@ public class MainActivity extends Activity {
 		initListener();
 	}
 
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		ContactsHelper.getInstance().startLoadContacts();//restart load contacts when contacts has been changed
+		CallRecordHelper.getInstance().startLoadCallRecord();//restart load callLog when callLog has been changed
+	}
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

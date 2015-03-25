@@ -24,16 +24,22 @@ public class Contacts extends BaseContacts{
 	
 	public Contacts() {
 		super();
-		mMultipleNumbersContacts=new ArrayList<Contacts>();
-	}public Contacts(String id ,String name, String phoneNumber) {
+		setMultipleNumbersContacts(new ArrayList<Contacts>());
+		setMatchKeywords(new StringBuffer());
+		getMatchKeywords().delete(0, getMatchKeywords().length());
+	}
+	
+	public Contacts(String id ,String name, String phoneNumber) {
 		// super();
 		setId(id);
 		setName(name);
 		setPhoneNumber(phoneNumber);
 		setNamePinyinUnits(new ArrayList<PinyinUnit>());
 		setSearchByType(SearchByType.SearchByNull);
-		mMatchKeywords = new StringBuffer();
-		mMatchKeywords.delete(0, mMatchKeywords.length());
+		
+		setMatchKeywords(new StringBuffer());
+		getMatchKeywords().delete(0, getMatchKeywords().length());
+		
 		setMultipleNumbersContacts(new ArrayList<Contacts>());
 	}
 	
@@ -93,9 +99,9 @@ public class Contacts extends BaseContacts{
 	}
 
 
-	/*public void setMatchKeywords(StringBuffer matchKeywords) {
+	public void setMatchKeywords(StringBuffer matchKeywords) {
 		mMatchKeywords = matchKeywords;
-	}*/
+	}
 	
 	public void setMatchKeywords(String matchKeywords) {
 		mMatchKeywords.delete(0, mMatchKeywords.length());

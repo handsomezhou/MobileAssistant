@@ -46,7 +46,7 @@ public class ContactsHelper {
 	 * private OnContactsChanged mOnContactsChanged=null; private
 	 * ContentObserver mContentObserver;
 	 */
-	private boolean mContactsChanged = true;
+	private static boolean mContactsChanged = true;
 	private HashMap<String, Contacts> mSelectedContactsHashMap=null; //(id+phoneNumber)as key
 	
 	/* private Handler mContactsHandler=new Handler(); */
@@ -63,7 +63,6 @@ public class ContactsHelper {
 
 	private ContactsHelper() {
 		initContactsHelper();
-		// registerContentObserver();
 	}
 
 	public static ContactsHelper getInstance() {
@@ -76,7 +75,6 @@ public class ContactsHelper {
 
 	public void destroy() {
 		if (null != mInstance) {
-			// unregisterContentObserver();
 			mInstance = null;// the system will free other memory.
 		}
 	}
@@ -122,11 +120,11 @@ public class ContactsHelper {
 		mOnContactsLoad = onContactsLoad;
 	}
 
-	private boolean isContactsChanged() {
+	public boolean isContactsChanged() {
 		return mContactsChanged;
 	}
 
-	private void setContactsChanged(boolean contactsChanged) {
+	public void setContactsChanged(boolean contactsChanged) {
 		mContactsChanged = contactsChanged;
 	}
 	
@@ -145,11 +143,11 @@ public class ContactsHelper {
 	 * @return start load success return true, otherwise return false
 	 */
 	public boolean startLoadContacts() {
-		if (true == isSearching()) {
+		if (false == isContactsChanged()) {
 			return false;
 		}
-
-		if (false == isContactsChanged()) {
+		
+		if (true == isSearching()) {
 			return false;
 		}
 
@@ -587,30 +585,6 @@ public class ContactsHelper {
 			mSelectedContactsHashMap.clear();
 		}
 	}
-
-	/*
-	 * private void registerContentObserver(){ if(null==mContentObserver){
-	 * mContentObserver=new ContentObserver(mContactsHandler) {
-	 * 
-	 * @Override public void onChange(boolean selfChange) {
-	 * setContactsChanged(true); if(null!=mOnContactsChanged){
-	 * Log.i("ActivityTest"
-	 * ,"mOnContactsChanged mContactsChanged="+mContactsChanged);
-	 * mOnContactsChanged.onContactsChanged(); } super.onChange(selfChange); }
-	 * 
-	 * }; }
-	 * 
-	 * if(null!=mContext){
-	 * mContext.getContentResolver().registerContentObserver(
-	 * ContactsContract.CommonDataKinds.Phone.CONTENT_URI, true,
-	 * mContentObserver); } }
-	 */
-	/*
-	 * private void unregisterContentObserver(){ if(null!=mContentObserver){
-	 * if(null!=mContext){
-	 * mContext.getContentResolver().unregisterContentObserver
-	 * (mContentObserver); } } }
-	 */
 
 	private boolean isSearching() {
 		return (mLoadTask != null && mLoadTask.getStatus() == Status.RUNNING);
