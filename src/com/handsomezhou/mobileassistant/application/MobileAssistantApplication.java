@@ -1,4 +1,4 @@
-package com.handsomezhou.mobileassistant.main;
+package com.handsomezhou.mobileassistant.application;
 
 import android.app.Application;
 import android.content.Context;

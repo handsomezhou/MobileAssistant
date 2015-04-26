@@ -11,8 +11,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.handsomezhou.mobileassistant.helper.ContactsHelper;
 import com.handsomezhou.mobileassistant.listener.CustomPhoneStateListener;
-import com.handsomezhou.mobileassistant.util.ContactsHelper;
 
 public class MobileAssistantService extends Service {
 	private static final String TAG="MobileAssistantService";

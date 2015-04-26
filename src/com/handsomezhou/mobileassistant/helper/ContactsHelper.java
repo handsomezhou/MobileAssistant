@@ -1,4 +1,4 @@
-package com.handsomezhou.mobileassistant.util;
+package com.handsomezhou.mobileassistant.helper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import android.os.AsyncTask.Status;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.handsomezhou.mobileassistant.main.MobileAssistantApplication;
+import com.handsomezhou.mobileassistant.application.MobileAssistantApplication;
 import com.handsomezhou.mobileassistant.model.Contacts;
 import com.handsomezhou.mobileassistant.model.Contacts.SearchByType;
 import com.pinyinsearch.model.PinyinBaseUnit;

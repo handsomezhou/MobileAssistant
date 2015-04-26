@@ -1,4 +1,4 @@
-package com.handsomezhou.mobileassistant.util;
+package com.handsomezhou.mobileassistant.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import android.os.AsyncTask.Status;
 import android.provider.CallLog;
 import android.util.Log;
 
-import com.handsomezhou.mobileassistant.main.MobileAssistantApplication;
+import com.handsomezhou.mobileassistant.application.MobileAssistantApplication;
 import com.handsomezhou.mobileassistant.model.CallRecord;
 
 

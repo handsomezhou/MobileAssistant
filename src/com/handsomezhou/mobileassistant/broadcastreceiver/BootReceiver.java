@@ -1,4 +1,4 @@
-package com.handsomezhou.mobileassistant.broadcast;
+package com.handsomezhou.mobileassistant.broadcastreceiver;
 
 import com.handsomezhou.mobileassistant.service.MobileAssistantService;
 
