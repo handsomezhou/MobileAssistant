@@ -10,11 +10,16 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 	private Context mContext;
 
+	
 	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData();
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		initData();
 		View view =initView(inflater,container);
 		initListener();
 		return view;
