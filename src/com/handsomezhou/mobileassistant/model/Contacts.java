@@ -6,45 +6,90 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import android.text.TextUtils;
+
 import com.pinyinsearch.model.PinyinUnit;
 
-public class Contacts extends BaseContacts{
+public class Contacts extends BaseContacts implements Cloneable{
+	private static final String TAG="ContactsContacts";
 	public enum SearchByType {
 		SearchByNull, SearchByName, SearchByPhoneNumber,
 	}
 	private String mSortKey; // as the sort key word
 
-	private List<PinyinUnit> mNamePinyinUnits; // save the mName converted to Pinyin characters.
+	private List<PinyinUnit> mNamePinyinUnits; // save the mName converted to
+												// Pinyin characters.
 
 	private SearchByType mSearchByType; // Used to save the type of search
-	private StringBuffer mMatchKeywords; // Used to save the type of Match Keywords.(name or phoneNumber)
+	private StringBuffer mMatchKeywords;// Used to save the type of Match Keywords.(name or phoneNumber)
+	private int mMatchStartIndex;		//the match start  position of mMatchKeywords in original string(name or phoneNumber).
+	private int mMatchLength;			//the match length of mMatchKeywords in original string(name or phoneNumber).
+	private boolean mSelected;	//whether select contact
+	private boolean mFirstMultipleContacts;//whether the first multiple Contacts
+	private boolean mHideMultipleContacts;		//whether hide multiple contacts
+	private boolean mBelongMultipleContactsPhone; //whether belong multiple contacts phone, the value of the variable will not change once you set.
 	
-	//is multiple number:mMultipleNumbersContacts.size()>0,non multiple number:mMultipleNumbersContacts.size()=0£»
-	private List<Contacts> mMultipleNumbersContacts;//save the contacts information who has multiple numbers.
-	
+	private boolean mHideOperationView; 		//whether hide operation view
+	private Contacts mNextContacts; //point the contacts information who has multiple numbers. 
+
 	public Contacts() {
 		super();
-		setMultipleNumbersContacts(new ArrayList<Contacts>());
+		setId(null);
+		setName(null);
+		setPhoneNumber(null);
+		setNamePinyinUnits(new ArrayList<PinyinUnit>());
+		setSearchByType(SearchByType.SearchByNull);
 		setMatchKeywords(new StringBuffer());
 		getMatchKeywords().delete(0, getMatchKeywords().length());
+		setMatchStartIndex(-1);
+		setMatchLength(0);
+		setNextContacts(null);
+		setSelected(false);
+		setFirstMultipleContacts(true);
+		setHideMultipleContacts(false);
+		setHideOperationView(true);
+		setBelongMultipleContactsPhone(false);
 	}
 	
 	public Contacts(String id ,String name, String phoneNumber) {
-		// super();
+		super();
 		setId(id);
 		setName(name);
 		setPhoneNumber(phoneNumber);
 		setNamePinyinUnits(new ArrayList<PinyinUnit>());
 		setSearchByType(SearchByType.SearchByNull);
-		
 		setMatchKeywords(new StringBuffer());
 		getMatchKeywords().delete(0, getMatchKeywords().length());
-		
-		setMultipleNumbersContacts(new ArrayList<Contacts>());
+		setMatchStartIndex(-1);
+		setMatchLength(0);
+		setNextContacts(null);
+		setSelected(false);
+		setFirstMultipleContacts(true);
+		setHideMultipleContacts(false);
+		setHideOperationView(true);
+		setBelongMultipleContactsPhone(false);
 	}
 	
+	public Contacts(String id, String name, String phoneNumber, String sortKey) {
+		super();
+		setId(id);
+		setName(name);
+		setPhoneNumber(phoneNumber);
+		setSortKey(sortKey);
+		setNamePinyinUnits(new ArrayList<PinyinUnit>());
+		setSearchByType(SearchByType.SearchByNull);
+		setMatchKeywords(new StringBuffer());
+		getMatchKeywords().delete(0, getMatchKeywords().length());
+		setMatchStartIndex(-1);
+		setMatchLength(0);
+		setNextContacts(null);
+		setSelected(false);
+		setFirstMultipleContacts(true);
+		setHideMultipleContacts(false);
+		setHideOperationView(true);
+		setBelongMultipleContactsPhone(false);
+	}
 	
-
 	private static Comparator<Object> mChineseComparator = Collator.getInstance(Locale.CHINA);
 	
 	public static Comparator<Contacts> mDesComparator = new Comparator<Contacts>() {
@@ -64,45 +109,60 @@ public class Contacts extends BaseContacts{
 		}
 	};
 	
-	public String getSortKey() {
-		return mSortKey;
-	}
+	/*public static Comparator<List<Contacts>> mAscComparator = new Comparator<List<Contacts>>() {
 
+		@Override
+		public int compare(List<Contacts> lhs, List<Contacts> rhs) {
+			if((null==lhs)||(lhs.size()<=0)||(null==rhs)||(rhs.size()<=0)){
+				return 0;
+			}
+			return mChineseComparator.compare(lhs.get(0).mSortKey, rhs.get(0).mSortKey);
+		}
+	};*/
+	
+	public static Comparator<Contacts> mSearchComparator = new Comparator<Contacts>() {
 
-	public void setSortKey(String sortKey) {
-		mSortKey = sortKey;
-	}
+		@Override
+		public int compare(Contacts lhs, Contacts rhs) {
+			int compareMatchStartIndex=(lhs.mMatchStartIndex-rhs.mMatchStartIndex);
+			return ((0!=compareMatchStartIndex)?(compareMatchStartIndex):(rhs.mMatchLength-lhs.mMatchLength));
+		}
+	};
+
 
 
 	public List<PinyinUnit> getNamePinyinUnits() {
 		return mNamePinyinUnits;
 	}
 
-
 	public void setNamePinyinUnits(List<PinyinUnit> namePinyinUnits) {
 		mNamePinyinUnits = namePinyinUnits;
 	}
+	
+	public String getSortKey() {
+		return mSortKey;
+	}
 
+	public void setSortKey(String sortKey) {
+		mSortKey = sortKey;
+	}
 
 	public SearchByType getSearchByType() {
 		return mSearchByType;
 	}
 
-
 	public void setSearchByType(SearchByType searchByType) {
 		mSearchByType = searchByType;
 	}
-
 
 	public StringBuffer getMatchKeywords() {
 		return mMatchKeywords;
 	}
 
-
 	public void setMatchKeywords(StringBuffer matchKeywords) {
 		mMatchKeywords = matchKeywords;
 	}
-	
+
 	public void setMatchKeywords(String matchKeywords) {
 		mMatchKeywords.delete(0, mMatchKeywords.length());
 		mMatchKeywords.append(matchKeywords);
@@ -111,37 +171,122 @@ public class Contacts extends BaseContacts{
 	public void clearMatchKeywords() {
 		mMatchKeywords.delete(0, mMatchKeywords.length());
 	}
+	
+	public int getMatchStartIndex() {
+		return mMatchStartIndex;
+	}
 
+	public void setMatchStartIndex(int matchStartIndex) {
+		mMatchStartIndex = matchStartIndex;
+	}
 
-	public List<Contacts> getMultipleNumbersContacts() {
-		return mMultipleNumbersContacts;
+	public int getMatchLength() {
+		return mMatchLength;
+	}
+
+	public void setMatchLength(int matchLength) {
+		mMatchLength = matchLength;
+	}
+
+	public boolean isSelected() {
+		return mSelected;
+	}
+
+	public void setSelected(boolean selected) {
+		mSelected = selected;
 	}
 	
-	public void setMultipleNumbersContacts(List<Contacts> multipleNumbersContacts) {
-		mMultipleNumbersContacts = multipleNumbersContacts;
+	public boolean isFirstMultipleContacts() {
+		return mFirstMultipleContacts;
+	}
+
+	public void setFirstMultipleContacts(boolean firstMultipleContacts) {
+		mFirstMultipleContacts = firstMultipleContacts;
 	}
 	
-	public void addPhoneNumber(String phoneNumber){
-		if(getPhoneNumber().equals(phoneNumber)){
-			return;
-		}
-		
-		int i=0;
-		for (i = 0; i < getMultipleNumbersContacts().size(); i++) {
-			if (getMultipleNumbersContacts().get(i).getPhoneNumber().equals(phoneNumber)) {
+	public boolean isHideMultipleContacts() {
+		return mHideMultipleContacts;
+	}
+
+	public void setHideMultipleContacts(boolean hideMultipleContacts) {
+		mHideMultipleContacts = hideMultipleContacts;
+	}
+	
+	public boolean isBelongMultipleContactsPhone() {
+		return mBelongMultipleContactsPhone;
+	}
+
+	public void setBelongMultipleContactsPhone(boolean belongMultipleContactsPhone) {
+		mBelongMultipleContactsPhone = belongMultipleContactsPhone;
+	}
+
+	public boolean isHideOperationView() {
+		return mHideOperationView;
+	}
+
+	public void setHideOperationView(boolean hideOperationView) {
+		mHideOperationView = hideOperationView;
+	}
+	
+	public Contacts getNextContacts() {
+		return mNextContacts;
+	}
+
+	public void setNextContacts(Contacts nextContacts) {
+		mNextContacts = nextContacts;
+	}
+
+	public static Contacts addMulitpleContact(Contacts contacts, String phoneNumber){
+		do{
+			if((TextUtils.isEmpty(phoneNumber))||(null==contacts)){
 				break;
 			}
-		}
-		
-		if (i >= getMultipleNumbersContacts().size()) {
-			Contacts cs=new Contacts(getId(), getName(), phoneNumber);
-			cs.setSortKey(mSortKey);
-			cs.setNamePinyinUnits(mNamePinyinUnits);// not deep copy
-		
-			mMultipleNumbersContacts.add(cs);
 			
-		}
+			Contacts currentContact=null;
+			Contacts nextContacts=null;
+			for(nextContacts=contacts; null!=nextContacts; nextContacts=nextContacts.getNextContacts()){
+				currentContact=nextContacts;
+				if(nextContacts.getPhoneNumber().equals(phoneNumber)){
+					break;
+				}
+			}
+			Contacts cts=null;
+			if(null==nextContacts){
+				Contacts cs=currentContact;
+				cts=new Contacts(cs.getId(), cs.getName(),phoneNumber);
+				cts.setSortKey(cs.getSortKey());
+				cts.setNamePinyinUnits(cs.getNamePinyinUnits());// not deep copy
+				cts.setFirstMultipleContacts(false);
+				cts.setHideMultipleContacts(true);
+				cts.setBelongMultipleContactsPhone(true);
+				cs.setBelongMultipleContactsPhone(true);
+				cs.setNextContacts(cts);
+			}
+			
+			return cts;
+		}while(false);
 		
-		return;
+		return null;
 	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Contacts obj=(Contacts) super.clone();
+		obj.mNamePinyinUnits=new ArrayList<PinyinUnit>();
+		for(PinyinUnit pu:mNamePinyinUnits){
+			obj.mNamePinyinUnits.add((PinyinUnit)pu.clone());
+		}
+		obj.mSearchByType=mSearchByType;
+		obj.mMatchKeywords=new StringBuffer(mMatchKeywords);
+		obj.mNextContacts=mNextContacts;
+		
+		return super.clone();
+	}
+
+	
+/*	public void showContacts(){
+		Log.i(TAG,"mId=["+getId()+"]mSortKey=["+mSortKey+"]"+"mName=["+getName()+"]+"+"mPhoneNumber:"+getPhoneNumber()+"+ phoneNumberCount=["+mMultipleNumbersContacts.size()+1+"]");
+		for(Contacts contacts:mMultipleNumbersContacts){
+			Log.i(TAG, "phone=["+contacts.getPhoneNumber()+"]");
+		}
+	}*/
 }

@@ -143,15 +143,15 @@ public class ContactsHelper {
 	 * @return start load success return true, otherwise return false
 	 */
 	public boolean startLoadContacts() {
-		if (false == isContactsChanged()) {
-			return false;
-		}
-		
 		if (true == isSearching()) {
 			return false;
 		}
 
-		mLoadTask = new AsyncTask<Object, Object, List<Contacts>>() {
+		if (false == isContactsChanged()) {
+			return false;
+		}
+
+		mLoadTask = new AsyncTask<Object, Object,List<Contacts>>() {
 
 			@Override
 			protected List<Contacts> doInBackground(Object... params) {
@@ -179,8 +179,8 @@ public class ContactsHelper {
 	 * 
 	 */
 	public void parseT9InputSearchContacts(String search) {
-		/*List<Contacts> mSearchByNameContacts=new ArrayList<Contacts>();
-		List<Contacts> mSearchByPhoneNumberContacts=new ArrayList<Contacts>();*/
+		List<Contacts> mSearchByNameContacts=new ArrayList<Contacts>();
+		List<Contacts> mSearchByPhoneNumberContacts=new ArrayList<Contacts>();
 
 		if (null == search) {// add all base data to search
 			if (null != mSearchContacts) {
@@ -189,30 +189,26 @@ public class ContactsHelper {
 				mSearchContacts = new ArrayList<Contacts>();
 			}
 
-			for (Contacts contacts : mBaseContacts) {
-				contacts.setSearchByType(SearchByType.SearchByNull);
-				contacts.clearMatchKeywords();
-				mSearchContacts.add(contacts);
-				if(contacts.getMultipleNumbersContacts().size()>0){
-					List<Contacts> multipleContacts=contacts.getMultipleNumbersContacts();
-					for(Contacts cs:multipleContacts){
-						cs.setSearchByType(SearchByType.SearchByNull);
-						cs.clearMatchKeywords();
-						//just for test
-						//if(false==cs.isHideMultipleContacts()){
-							mSearchContacts.add(cs);
-						//}
-						
+			for (int i=0; i<mBaseContacts.size(); i++) {
+				Contacts currentContacts=null;
+				for(currentContacts=mBaseContacts.get(i); null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					currentContacts.setSearchByType(SearchByType.SearchByNull);
+					currentContacts.clearMatchKeywords();
+					currentContacts.setMatchStartIndex(-1);
+					currentContacts.setMatchLength(0);
+					if(true==currentContacts.isFirstMultipleContacts()){
+						mSearchContacts.add(currentContacts);
+					}else{
+						if(false==currentContacts.isHideMultipleContacts()){
+							mSearchContacts.add(currentContacts);
+						}
 					}
-					
 				}
 			}
-
+			
 			//mSearchContacts.addAll(mBaseContacts);
-			mFirstNoSearchResultInput.delete(0,
-					mFirstNoSearchResultInput.length());
-			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="
-					+ mFirstNoSearchResultInput.length());
+			mFirstNoSearchResultInput.delete(0,mFirstNoSearchResultInput.length());
+			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="+ mFirstNoSearchResultInput.length());
 			return;
 		}
 
@@ -257,67 +253,50 @@ public class ContactsHelper {
 		 */
 		for (int i = 0; i < contactsCount; i++) {
 
-			List<PinyinUnit> pinyinUnits = mBaseContacts.get(i)
-					.getNamePinyinUnits();
-			StringBuffer chineseKeyWord = new StringBuffer();// In order to get
-																// Chinese
-																// KeyWords.Of
-																// course it's
-																// maybe not
-																// Chinese
-																// characters.
+			List<PinyinUnit> pinyinUnits = mBaseContacts.get(i).getNamePinyinUnits();
+			StringBuffer chineseKeyWord = new StringBuffer();// In order to get Chinese KeyWords.Ofcourse it's maybe not Chinese characters.
 			String name = mBaseContacts.get(i).getName();
-			if (true == T9MatchPinyinUnits.matchPinyinUnits(pinyinUnits, name,
-					search, chineseKeyWord)) {// search by NamePinyinUnits;
-				mBaseContacts.get(i).setSearchByType(SearchByType.SearchByName);
-				mBaseContacts.get(i)
-						.setMatchKeywords(chineseKeyWord.toString());
+			if (true == T9MatchPinyinUnits.matchPinyinUnits(pinyinUnits, name,search, chineseKeyWord)) {// search by NamePinyinUnits;
+				
+				Contacts currentContacts=null;
+				Contacts firstContacts=null;
+				for(currentContacts=mBaseContacts.get(i),firstContacts=currentContacts; null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					currentContacts.setSearchByType(SearchByType.SearchByName);
+					currentContacts.setMatchKeywords(chineseKeyWord.toString());
+					currentContacts.setMatchStartIndex(firstContacts.getName().indexOf(firstContacts.getMatchKeywords().toString()));
+					currentContacts.setMatchLength(firstContacts.getMatchKeywords().length());
+					mSearchByNameContacts.add(currentContacts);
+				}
 				chineseKeyWord.delete(0, chineseKeyWord.length());
-				mSearchContacts.add(mBaseContacts.get(i));
-				//mSearchByNameContacts.add(mBaseContacts.get(i));
 				
-				if(mBaseContacts.get(i).getMultipleNumbersContacts().size()>0){
-					int phoneNumberCount=mBaseContacts.get(i).getMultipleNumbersContacts().size();
-					for(int j=0; j<phoneNumberCount; j++){
-						Contacts cs=mBaseContacts.get(i).getMultipleNumbersContacts().get(j);
-						cs.setSearchByType(SearchByType.SearchByName);
-						cs.setMatchKeywords(mBaseContacts.get(i)
-								.getMatchKeywords().toString());
-						mSearchContacts.add(cs);
-						//mSearchByNameContacts.add(cs);
-				
-					}
-				}
 				continue;
-			} else {		
-				if (mBaseContacts.get(i).getPhoneNumber().contains(search)) { // search by phone number
-					mBaseContacts.get(i).setSearchByType(
-							SearchByType.SearchByPhoneNumber);
-					mBaseContacts.get(i).setMatchKeywords(search);
-					mSearchContacts.add(mBaseContacts.get(i));
-					//mSearchByPhoneNumberContacts.add(mBaseContacts.get(i));
-					
-				}
-				
-				if(mBaseContacts.get(i).getMultipleNumbersContacts().size()>0){
-					int phoneNumberCount=mBaseContacts.get(i).getMultipleNumbersContacts().size();
-					for(int j=0; j<phoneNumberCount; j++){
-						Contacts cs=mBaseContacts.get(i).getMultipleNumbersContacts().get(j);
-						if(cs.getPhoneNumber().contains(search)){
-							cs.setSearchByType(SearchByType.SearchByPhoneNumber);
-							cs.setMatchKeywords(search);
-							mSearchContacts.add(cs);
-							//mSearchByPhoneNumberContacts.add(cs);
-						}
+			} else {
+				Contacts currentContacts=null;
+				for(currentContacts=mBaseContacts.get(i); null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					if(currentContacts.getPhoneNumber().contains(search)){// search by phone number
+						currentContacts.setSearchByType(SearchByType.SearchByPhoneNumber);
+						currentContacts.setMatchKeywords(search);
+						currentContacts.setMatchStartIndex(currentContacts.getPhoneNumber().indexOf(search));
+						currentContacts.setMatchLength(search.length());
+						mSearchByPhoneNumberContacts.add(currentContacts);
 					}
 				}
 				continue;
 
 			}
 		}
-		/*mSearchContacts.clear();
+		
+		if(mSearchByNameContacts.size()>0){
+			Collections.sort(mSearchByNameContacts, Contacts.mSearchComparator);
+		}
+		if(mSearchByPhoneNumberContacts.size()>0){
+			Collections.sort(mSearchByPhoneNumberContacts, Contacts.mSearchComparator);
+		}
+		
+		mSearchContacts.clear();
 		mSearchContacts.addAll(mSearchByNameContacts);
-		mSearchContacts.addAll(mSearchByPhoneNumberContacts);*/
+		mSearchContacts.addAll(mSearchByPhoneNumberContacts);
+		
 		if (mSearchContacts.size() <= 0) {
 			if (mFirstNoSearchResultInput.length() <= 0) {
 				mFirstNoSearchResultInput.append(search);
@@ -347,29 +326,26 @@ public class ContactsHelper {
 				mSearchContacts = new ArrayList<Contacts>();
 			}
 
-			for (Contacts contacts : mBaseContacts) {
-				contacts.setSearchByType(SearchByType.SearchByNull);
-				contacts.clearMatchKeywords();
-				mSearchContacts.add(contacts);
-				if(contacts.getMultipleNumbersContacts().size()>0){
-					List<Contacts> multipleContacts=contacts.getMultipleNumbersContacts();
-					for(Contacts cs:multipleContacts){
-						cs.setSearchByType(SearchByType.SearchByNull);
-						cs.clearMatchKeywords();
-						//just for test
-						//if(false==cs.isHideMultipleContacts()){
-							mSearchContacts.add(cs);
-						//}
+			for(int i=0; i<mBaseContacts.size(); i++){
+				Contacts currentContacts=null;
+				for(currentContacts=mBaseContacts.get(i); null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					currentContacts.setSearchByType(SearchByType.SearchByNull);
+					currentContacts.clearMatchKeywords();
+					currentContacts.setMatchStartIndex(-1);
+					currentContacts.setMatchLength(0);
+					if(true==currentContacts.isFirstMultipleContacts()){
+						mSearchContacts.add(currentContacts);
+					}else{
+						if(false==currentContacts.isHideMultipleContacts()){
+							mSearchContacts.add(currentContacts);
+						}
 					}
-					
 				}
 			}
 
 			//mSearchContacts.addAll(mBaseContacts);
-			mFirstNoSearchResultInput.delete(0,
-					mFirstNoSearchResultInput.length());
-			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="
-					+ mFirstNoSearchResultInput.length());
+			mFirstNoSearchResultInput.delete(0,mFirstNoSearchResultInput.length());
+			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="+ mFirstNoSearchResultInput.length());
 			return;
 		}
 
@@ -413,54 +389,32 @@ public class ContactsHelper {
 		 */
 		for (int i = 0; i < contactsCount; i++) {
 
-			List<PinyinUnit> pinyinUnits = mBaseContacts.get(i)
-					.getNamePinyinUnits();
-			StringBuffer chineseKeyWord = new StringBuffer();// In order to get
-																// Chinese
-																// KeyWords.Of
-																// course it's
-																// maybe not
-																// Chinese
-																// characters.
+			List<PinyinUnit> pinyinUnits = mBaseContacts.get(i).getNamePinyinUnits();
+			StringBuffer chineseKeyWord = new StringBuffer();// In order to get Chinese KeyWords.Ofcourse it's maybe not Chinese characters.
+			
 			String name = mBaseContacts.get(i).getName();
-			if (true == QwertyMatchPinyinUnits.matchPinyinUnits(pinyinUnits,
-					name, search, chineseKeyWord)) {// search by NamePinyinUnits;
-				mBaseContacts.get(i).setSearchByType(SearchByType.SearchByName);
-				mBaseContacts.get(i)
-						.setMatchKeywords(chineseKeyWord.toString());
-				chineseKeyWord.delete(0, chineseKeyWord.length());
-				mSearchContacts.add(mBaseContacts.get(i));
-				
-				if(mBaseContacts.get(i).getMultipleNumbersContacts().size()>0){
-					int phoneNumberCount=mBaseContacts.get(i).getMultipleNumbersContacts().size();
-					for(int j=0; j<phoneNumberCount; j++){
-						Contacts cs=mBaseContacts.get(i).getMultipleNumbersContacts().get(j);
-						cs.setSearchByType(SearchByType.SearchByName);
-						cs.setMatchKeywords(mBaseContacts.get(i)
-								.getMatchKeywords().toString());
-						mSearchContacts.add(cs);
-					
-					}
+			if (true == QwertyMatchPinyinUnits.matchPinyinUnits(pinyinUnits,name, search, chineseKeyWord)) {// search by NamePinyinUnits;
+				Contacts currentContacts=null;
+				Contacts firstContacts=null;
+				for(currentContacts=mBaseContacts.get(i),firstContacts=currentContacts; null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					currentContacts.setSearchByType(SearchByType.SearchByName);
+					currentContacts.setMatchKeywords(chineseKeyWord.toString());
+					currentContacts.setMatchStartIndex(firstContacts.getName().indexOf(firstContacts.getMatchKeywords().toString()));
+					currentContacts.setMatchLength(firstContacts.getMatchKeywords().length());
+					mSearchContacts.add(currentContacts);
 				}
+				chineseKeyWord.delete(0, chineseKeyWord.length());
+				
 				continue;
 			} else {
-				if (mBaseContacts.get(i).getPhoneNumber().contains(search)) { // search  by phone number
-					mBaseContacts.get(i).setSearchByType(
-							SearchByType.SearchByPhoneNumber);
-					mBaseContacts.get(i).setMatchKeywords(search);
-					mSearchContacts.add(mBaseContacts.get(i));
-					//continue;
-				}
-
-				if(mBaseContacts.get(i).getMultipleNumbersContacts().size()>0){
-					int phoneNumberCount=mBaseContacts.get(i).getMultipleNumbersContacts().size();
-					for(int j=0; j<phoneNumberCount; j++){
-						Contacts cs=mBaseContacts.get(i).getMultipleNumbersContacts().get(j);
-						if(cs.getPhoneNumber().contains(search)){
-							cs.setSearchByType(SearchByType.SearchByPhoneNumber);
-							cs.setMatchKeywords(search);
-							mSearchContacts.add(cs);
-						}
+				Contacts currentContacts=null;
+				for(currentContacts=mBaseContacts.get(i); null!=currentContacts; currentContacts=currentContacts.getNextContacts()){
+					if(currentContacts.getPhoneNumber().contains(search)){// search by phone number
+						currentContacts.setSearchByType(SearchByType.SearchByPhoneNumber);
+						currentContacts.setMatchKeywords(search);
+						currentContacts.setMatchStartIndex(currentContacts.getPhoneNumber().indexOf(search));
+						currentContacts.setMatchLength(search.length());
+						mSearchContacts.add(currentContacts);
 					}
 				}
 				continue;
@@ -479,6 +433,8 @@ public class ContactsHelper {
 			} else {
 
 			}
+		}else{
+			Collections.sort(mSearchContacts, Contacts.mSearchComparator);
 		}
 
 	}
@@ -525,35 +481,38 @@ public class ContactsHelper {
 	
 	// just for debug
 	public void showContactsInfo() {
-		int contactsCount = ContactsHelper.getInstance().getBaseContacts()
-				.size();
+		int contactsCount = ContactsHelper.getInstance().getBaseContacts().size();
 		for (int i = 0; i < contactsCount; i++) {
-			String name = ContactsHelper.getInstance().getBaseContacts().get(i)
-					.getName();
-			List<PinyinUnit> pinyinUnit = ContactsHelper.getInstance()
-					.getBaseContacts().get(i).getNamePinyinUnits();
-			Log.i(TAG,
-					"++++++++++++++++++++++++++++++:name=[" + name + "]"
-							+ "firstCharacter=["
-							+ PinyinUtil.getFirstCharacter(pinyinUnit) + "]"
-							+ "firstLetter=["
-							+ PinyinUtil.getFirstLetter(pinyinUnit) + "]"
-							+ "+++++++++++++++++++++++++++++");
-			int pinyinUnitCount = pinyinUnit.size();
-			for (int j = 0; j < pinyinUnitCount; j++) {
-				PinyinUnit pyUnit = pinyinUnit.get(j);
-				Log.i(TAG, "j=" + j + ",isPinyin[" + pyUnit.isPinyin()
-						+ "],startPosition=[" + pyUnit.getStartPosition() + "]");
-				List<PinyinBaseUnit> stringIndex = pyUnit
-						.getPinyinBaseUnitIndex();
-				int stringIndexLength = stringIndex.size();
-				for (int k = 0; k < stringIndexLength; k++) {
-					Log.i(TAG, "k=" + k + "["
-							+ stringIndex.get(k).getOriginalString() + "]"
-							+ "[" + stringIndex.get(k).getPinyin() + "]+["
-							+ stringIndex.get(k).getNumber() + "]");
+			Contacts currentCoutacts=null;
+			for(currentCoutacts=ContactsHelper.getInstance().getBaseContacts().get(i);null!=currentCoutacts; currentCoutacts=currentCoutacts.getNextContacts()){
+				Log.i(TAG, "======================================================================");
+				String name = currentCoutacts.getName();
+				List<PinyinUnit> pinyinUnit = currentCoutacts.getNamePinyinUnits();
+				Log.i(TAG,
+						"++++++++++++++++++++++++++++++:name=[" + name + "] phoneNumber"+currentCoutacts.getPhoneNumber()
+								+currentCoutacts.isHideMultipleContacts()+ "firstCharacter=["
+								+ PinyinUtil.getFirstCharacter(pinyinUnit) + "]"
+								+ "firstLetter=["
+								+ PinyinUtil.getFirstLetter(pinyinUnit) + "]"
+								+ "+++++++++++++++++++++++++++++");
+				int pinyinUnitCount = pinyinUnit.size();
+				for (int j = 0; j < pinyinUnitCount; j++) {
+					PinyinUnit pyUnit = pinyinUnit.get(j);
+					Log.i(TAG, "j=" + j + ",isPinyin[" + pyUnit.isPinyin()
+							+ "],startPosition=[" + pyUnit.getStartPosition() + "]");
+					List<PinyinBaseUnit> stringIndex = pyUnit
+							.getPinyinBaseUnitIndex();
+					int stringIndexLength = stringIndex.size();
+					for (int k = 0; k < stringIndexLength; k++) {
+						Log.i(TAG, "k=" + k + "["
+								+ stringIndex.get(k).getOriginalString() + "]"
+								+ "[" + stringIndex.get(k).getPinyin() + "]+["
+								+ stringIndex.get(k).getNumber() + "]");
+					}
 				}
 			}
+			
+			
 		}
 	}
 
@@ -595,12 +554,12 @@ public class ContactsHelper {
 		List<Contacts> kanjiStartContacts = new ArrayList<Contacts>();
 		HashMap<String, Contacts> kanjiStartContactsHashMap=new HashMap<String, Contacts>();
 		
-		List<Contacts> nonKanjiStartContacts = new ArrayList<Contacts>();
-		HashMap<String, Contacts> nonKanjiStartContactsHashMap=new HashMap<String, Contacts>();
+		List<Contacts>  nonKanjiStartContacts = new ArrayList<Contacts>();
+		HashMap<String, Contacts> nonKanjiStartContactsHashMap=new HashMap<String,Contacts>();
 		
 		List<Contacts> contacts=new ArrayList<Contacts>();
 		
-		Contacts cs = null;
+		Contacts cs=null;
 		Cursor cursor = null;
 		String sortkey = null;
 		long startLoadTime=System.currentTimeMillis();
@@ -617,25 +576,25 @@ public class ContactsHelper {
 				String id=cursor.getString(idColumnIndex);
 				String displayName = cursor.getString(dispalyNameColumnIndex);
 				String phoneNumber = cursor.getString(numberColumnIndex);
-				Log.i(TAG, "id=["+id+"]name=["+displayName+"]"+"number=["+phoneNumber+"]");
+			//	Log.i(TAG, "id=["+id+"]name=["+displayName+"]"+"number=["+phoneNumber+"]");
 				
 				boolean kanjiStartContactsExist=kanjiStartContactsHashMap.containsKey(id);
 				boolean nonKanjiStartContactsExist=nonKanjiStartContactsHashMap.containsKey(id);
 				
 				if(true==kanjiStartContactsExist){
 					cs=kanjiStartContactsHashMap.get(id);
-					cs.addPhoneNumber(phoneNumber);
+					Contacts.addMulitpleContact(cs, phoneNumber);
 				}else if(true==nonKanjiStartContactsExist){
 					cs=nonKanjiStartContactsHashMap.get(id);
-					cs.addPhoneNumber(phoneNumber);
+					Contacts.addMulitpleContact(cs, phoneNumber);
 				}else{
+					
 					cs = new Contacts(id,displayName, phoneNumber);
-					PinyinUtil.chineseStringToPinyinUnit(cs.getName(),
-							cs.getNamePinyinUnits());
-					sortkey = PinyinUtil.getSortKey(cs.getNamePinyinUnits())
-							.toUpperCase();
+					PinyinUtil.chineseStringToPinyinUnit(cs.getName(),cs.getNamePinyinUnits());
+					sortkey = PinyinUtil.getSortKey(cs.getNamePinyinUnits()).toUpperCase();
 					cs.setSortKey(praseSortKey(sortkey));
 					boolean isKanji=PinyinUtil.isKanji(cs.getName().charAt(0));
+					
 					if(true==isKanji){
 						kanjiStartContactsHashMap.put(id, cs);
 					}else{
@@ -693,8 +652,17 @@ public class ContactsHelper {
 		}
 	
 		long endLoadTime=System.currentTimeMillis();
-		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"] contacts.size()=["+contacts.size()+"]");
+		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"] contacts.size()="+contacts.size());
 		
+		/*for(int i=0; i<contacts.size(); i++){
+			Log.i(TAG, "****************************************");
+			Contacts currentContacts=contacts.get(i);
+			while(null!=currentContacts){
+				Log.i(TAG, "name["+currentContacts.getName()+"]phoneNumber["+currentContacts.getPhoneNumber()+"]");
+				currentContacts=currentContacts.getNextContacts();
+			}
+				
+		}*/
 		return contacts;
 	}
 	
@@ -705,8 +673,7 @@ public class ContactsHelper {
 			}
 			return;
 		}
-		
-		mBaseContacts.clear();//clear all base contacts
+
 		for (Contacts contact : contacts) {
 			if (!mBaseContacts.contains(contact)) {
 				mBaseContacts.add(contact);
@@ -730,9 +697,9 @@ public class ContactsHelper {
 			return sortKey;
 		}
 
-	/*	return String.valueOf(QuickAlphabeticBar.DEFAULT_INDEX_CHARACTER)
+		/*return String.valueOf(QuickAlphabeticBar.DEFAULT_INDEX_CHARACTER)
 				+ sortKey;*/
-		return String.valueOf('#')+ sortKey;
+		return  String.valueOf('#')+ sortKey;
 	}
 	
 	/**
@@ -745,5 +712,4 @@ public class ContactsHelper {
 		
 		return contacts.getId()+contacts.getPhoneNumber();
 	}	
-
 }

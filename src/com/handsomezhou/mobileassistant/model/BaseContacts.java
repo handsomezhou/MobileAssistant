@@ -1,14 +1,9 @@
 package com.handsomezhou.mobileassistant.model;
 
-public class BaseContacts {
+public class BaseContacts implements Cloneable{
 	private String mId;
 	private String mName;
 	private String mPhoneNumber;
-
-	public BaseContacts() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	
 	public String getId() {
 		return mId;
@@ -29,8 +24,15 @@ public class BaseContacts {
 	public String getPhoneNumber() {
 		return mPhoneNumber;
 	}
-
+	
 	public void setPhoneNumber(String phoneNumber) {
 		mPhoneNumber = phoneNumber;
 	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		
+		return super.clone();
+	}
 }
+
