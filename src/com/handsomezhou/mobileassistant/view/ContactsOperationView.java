@@ -72,7 +72,9 @@ public class ContactsOperationView extends FrameLayout implements
 
 	};
 
-	public ContactsOperationView(Context context) {
+	
+
+    public ContactsOperationView(Context context) {
 		super(context);
 		mContext = context;
 		initView();
