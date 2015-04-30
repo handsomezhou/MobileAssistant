@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/telephone_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/telephone" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true" >
 
-</LinearLayout>
+        <com.handsomezhou.mobileassistant.view.ContactsOperationView
+            android:id="@+id/contacts_operation_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom" />
+
+        <com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView
+            android:id="@+id/t9_telephone_dialpad_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="true" />
+    </FrameLayout>
+
+</RelativeLayout>

@@ -35,7 +35,7 @@ public class ContactsFragment extends BaseFragment implements OnContactsLoad,OnC
 
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
-		View view =inflater.inflate(R.layout.fragment_contacts, container, false);
+		View view =inflater.inflate(R.layout.fragment_contacts_qwerty, container, false);
 		mSearchEt=(EditText)view.findViewById(R.id.search_edit_text);
 		mContactsOperationView = (ContactsOperationView)view.findViewById(R.id.contacts_operation_layout);
 		mContactsOperationView.setOnContactsOperationView(this);
@@ -65,21 +65,12 @@ public class ContactsFragment extends BaseFragment implements OnContactsLoad,OnC
 			
 			@Override
 			public void afterTextChanged(Editable s) {
-				String curCharacter=s.toString().trim();
-				
-				if(TextUtils.isEmpty(curCharacter)){
-					ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
-				}else{
-					ContactsHelper.getInstance().parseQwertyInputSearchContacts(curCharacter);
-				}
-				mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter));
-				
+			    updateSearch(s.toString());
 			}
 		});
 	}
 	
-
-	/*start:OnContactsLoad*/
+    /*start:OnContactsLoad*/
 	@Override
 	public void onContactsLoadSuccess() {
 		ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
@@ -139,4 +130,24 @@ public class ContactsFragment extends BaseFragment implements OnContactsLoad,OnC
 		ShareUtil.shareTextBySms(getContext(), contacts.getPhoneNumber(), null);
 	}
 	/*end:OnContactsOperationView*/
+	
+	public void updateSearch(){
+	    updateSearch(mSearchEt.getText().toString());
+	}
+	
+	private void updateSearch(String search){
+	    String curCharacter;
+	    if(null==search){
+	        curCharacter=search;
+	    }else{
+	        curCharacter=search.trim();
+	    }
+	   
+        if(TextUtils.isEmpty(curCharacter)){
+            ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
+        }else{
+            ContactsHelper.getInstance().parseQwertyInputSearchContacts(curCharacter);
+        }
+        mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter));
+	}
 }

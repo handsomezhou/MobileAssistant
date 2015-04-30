@@ -119,8 +119,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 			public void onPageSelected(int pos) {
 				
 				AddressBookView addressBookView=mAddressBookViews.get(pos);
-				//Toast.makeText(getContext(),addressBookView.getTag().toString()+"+++" , Toast.LENGTH_LONG).show();
 				mBottomTabView.setCurrentTabItem(addressBookView.getTag());
+				changeToTab(null, mBottomTabView.getCurrentTab(),TAB_CHANGE_STATE.TAB_SELECTED_FOCUSED);
 			}
 			
 			@Override
@@ -153,7 +153,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 			TAB_CHANGE_STATE tabChangeState) {
 		//Toast.makeText(getContext(), "onChangeToTab"+"["+fromTab.toString()+"]["+toTab.toString()+"]tabChangeState["+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
 		int item=getAddressBookViewItem(toTab);
-		mCustomViewPager.setCurrentItem(item);	
+		mCustomViewPager.setCurrentItem(item);
+		changeToTab(fromTab, toTab, tabChangeState);
 	}
 
 	@Override
@@ -172,6 +173,30 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 		}
 	}
 	/*End: OnTabChange*/
+	
+	private void changeToTab(Object fromTab, Object toTab,TAB_CHANGE_STATE tabChangeState){
+	    if(null==toTab){
+	        return;
+	    }
+	    
+	    Fragment fragment=mAddressBookViews.get(getAddressBookViewItem(toTab)).getFragment();
+        switch ((BOTTOM_TAB_TAG)toTab) {
+            case CALL:
+                if(fragment instanceof TelephoneFragment){
+                    ((TelephoneFragment) fragment).updateView(tabChangeState);
+                    ((TelephoneFragment) fragment).updateSearch();
+                }
+                break;
+            case CONTACTS:
+                if(fragment instanceof ContactsFragment){
+                    ((ContactsFragment) fragment).updateSearch();
+                }
+                break;
+
+            default:
+                break;
+        }    
+	}
 	
 	private int getAddressBookViewItem(Object tag){
 		int item=0;;
