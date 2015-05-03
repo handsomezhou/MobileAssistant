@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
-import com.handsomezhou.mobileassistant.adapter.ContactsAdapter;
-import com.handsomezhou.mobileassistant.adapter.ContactsAdapter.OnContactsAdapter;
+import com.handsomezhou.mobileassistant.adapter.ContactsQwertyAdapter;
+import com.handsomezhou.mobileassistant.adapter.ContactsQwertyAdapter.OnContactsQwertyAdapter;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
 import com.handsomezhou.mobileassistant.model.Contacts;
 import com.handsomezhou.mobileassistant.util.ViewUtil;
@@ -28,7 +28,7 @@ import com.handsomezhou.mobileassistant.view.ContactsIndexView.OnContactsIndexVi
 import com.handsomezhou.mobileassistant.view.QuickAlphabeticBar.OnQuickAlphabeticBar;
 
 public class ContactsOperationView extends FrameLayout implements
-		OnContactsIndexView, OnQuickAlphabeticBar ,OnContactsAdapter{
+		OnContactsIndexView, OnQuickAlphabeticBar ,OnContactsQwertyAdapter{
 	public static final String CONTACTS_INDEX="CONTACTS_INDEX";
 	private static final String TAG = "ContactsOperationView";
 	private static final int VIEW_SHOW_TIME_MILLIS = 4000;// ms
@@ -41,7 +41,7 @@ public class ContactsOperationView extends FrameLayout implements
 	private View mLoadContactsView;
 	private TextView mSelectCharTv;
 	private TextView mSearchResultPromptTv;
-	private ContactsAdapter mContactsAdapter;
+	private ContactsQwertyAdapter mContactsAdapter;
 	private View mContactsOperationView;
 	private OnContactsOperationView mOnContactsOperationView;
 
@@ -264,8 +264,8 @@ public class ContactsOperationView extends FrameLayout implements
 	}
 
 	private void initData() {
-		mContactsAdapter = new ContactsAdapter(mContext,
-				R.layout.contacts_list_item, ContactsHelper.getInstance()
+		mContactsAdapter = new ContactsQwertyAdapter(mContext,
+				R.layout.contacts_qwerty_list_item, ContactsHelper.getInstance()
 						.getSearchContacts());
 		mContactsAdapter.setOnContactsAdapter(this);
 		mContactsLv.setAdapter(mContactsAdapter);

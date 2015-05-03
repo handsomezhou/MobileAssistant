@@ -21,14 +21,14 @@ import com.handsomezhou.mobileassistant.util.ViewUtil;
 import com.handsomezhou.mobileassistant.view.QuickAlphabeticBar;
 
 
-public class ContactsAdapter extends ArrayAdapter<Contacts> implements SectionIndexer{
+public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements SectionIndexer{
 	//public static final String PINYIN_FIRST_LETTER_DEFAULT_VALUE="#";
 	private Context mContext;
 	private int mTextViewResourceId;
 	private List<Contacts> mContacts;
-	private OnContactsAdapter mOnContactsAdapter;
+	private OnContactsQwertyAdapter mOnContactsAdapter;
 	
-	public interface OnContactsAdapter{
+	public interface OnContactsQwertyAdapter{
 		//void onContactsSelectedChanged(List<Contacts> contacts);
 		void onAddContactsSelected(Contacts contacts);
 		void onRemoveContactsSelected(Contacts contacts);
@@ -37,7 +37,7 @@ public class ContactsAdapter extends ArrayAdapter<Contacts> implements SectionIn
 		void onContactsRefreshView();
 	}
 	
-	public ContactsAdapter(Context context, int textViewResourceId,
+	public ContactsQwertyAdapter(Context context, int textViewResourceId,
 			List<Contacts> contacts) {
 		super(context, textViewResourceId, contacts);
 		mContext=context;
@@ -46,11 +46,11 @@ public class ContactsAdapter extends ArrayAdapter<Contacts> implements SectionIn
 	
 	}
 	
-	public OnContactsAdapter getOnContactsAdapter() {
+	public OnContactsQwertyAdapter getOnContactsAdapter() {
 		return mOnContactsAdapter;
 	}
 
-	public void setOnContactsAdapter(OnContactsAdapter onContactsAdapter) {
+	public void setOnContactsAdapter(OnContactsQwertyAdapter onContactsAdapter) {
 		mOnContactsAdapter = onContactsAdapter;
 	}
 	

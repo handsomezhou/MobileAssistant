@@ -21,7 +21,7 @@ import com.handsomezhou.mobileassistant.util.ShareUtil;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView.OnContactsOperationView;
 
-public class ContactsFragment extends BaseFragment implements OnContactsLoad,OnContactsOperationView{
+public class ContactsQwertyFragment extends BaseFragment implements OnContactsLoad,OnContactsOperationView{
 	private static final String TAG="ContactsFragment";
 	private EditText mSearchEt;
 	private ContactsOperationView mContactsOperationView;

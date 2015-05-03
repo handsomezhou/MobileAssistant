@@ -49,7 +49,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 		/*End: call view*/
 		
 		/*Start: contacts view*/
-		AddressBookView contactsAddressBookView=new AddressBookView(BOTTOM_TAB_TAG.CONTACTS, new ContactsFragment());
+		AddressBookView contactsAddressBookView=new AddressBookView(BOTTOM_TAB_TAG.CONTACTS, new ContactsQwertyFragment());
 		mAddressBookViews.add(contactsAddressBookView);
 		/*End: contacts view*/
 		
@@ -188,8 +188,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
                 }
                 break;
             case CONTACTS:
-                if(fragment instanceof ContactsFragment){
-                    ((ContactsFragment) fragment).updateSearch();
+                if(fragment instanceof ContactsQwertyFragment){
+                    ((ContactsQwertyFragment) fragment).updateSearch();
                 }
                 break;
 
