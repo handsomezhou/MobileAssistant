@@ -10,27 +10,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.handsomezhou.mobileassistant.R;
-import com.handsomezhou.mobileassistant.model.Contacts;
+import com.handsomezhou.mobileassistant.model.CallRecord;
 
-public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
+public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 	private Context mContext;
 	private int mTextViewResourceId;
-	private List<Contacts> mContacts;
+	private List<CallRecord> mCallRecords;
 	
-	public ContactsT9Adapter(Context context, int textViewResourceId,
-			List<Contacts> contacts) {
-		super(context, textViewResourceId, contacts);
+	public CallLogAdapter(Context context, int textViewResourceId, List<CallRecord> callRecords) {
+		super(context, textViewResourceId, callRecords);
 		mContext=context;
 		mTextViewResourceId=textViewResourceId;
-		mContacts=contacts;
+		mCallRecords=callRecords;
 	}
-	
+
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view=null;
 		ViewHolder viewHolder;
-		Contacts contacts=getItem(position);
+		CallRecord callRecord=getItem(position);
 		if(null==convertView){
 			view=LayoutInflater.from(mContext).inflate(mTextViewResourceId, null);
 			viewHolder=new ViewHolder();
@@ -41,15 +40,12 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 			viewHolder=(ViewHolder) view.getTag();
 		}
 		
-		//viewHolder.mNameTv.setText(contacts.getName());
-		viewHolder.mNameTv.setText(contacts.getName());
+		viewHolder.mNameTv.setText(callRecord.getContacts().getName());
 		
 		return view;
 	}
-
-
+	
 	private class ViewHolder{
 		TextView mNameTv;
 	}
-
 }

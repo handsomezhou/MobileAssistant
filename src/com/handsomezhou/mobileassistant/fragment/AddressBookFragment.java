@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange;
-import com.handsomezhou.mobileassistant.activity.MainActivity;
 import com.handsomezhou.mobileassistant.adapter.AddressBookFragmentPagerAdapter;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
@@ -75,7 +74,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
 		View view=inflater.inflate(R.layout.fragment_address_book, mBottomTabView, false);
-		mCustomViewPager=(CustomViewPager)view.findViewById(R.id.custom_view_pager);
+		mCustomViewPager=(CustomViewPager)view.findViewById(R.id.custom_view_pager_address_book);
 		mCustomViewPager.setPagingEnabled(true);
 		
 	    mBottomTabView=(BottomTabView) view.findViewById(R.id.bottom_tab_view);

@@ -8,8 +8,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true" >
 
-        <com.handsomezhou.mobileassistant.view.ContactsOperationView
-            android:id="@+id/contacts_operation_layout"
+        <com.handsomezhou.mobileassistant.view.CustomViewPager
+            android:id="@+id/custom_view_pager_telephone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom" />

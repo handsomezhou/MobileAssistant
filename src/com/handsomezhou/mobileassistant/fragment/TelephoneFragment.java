@@ -1,15 +1,21 @@
 package com.handsomezhou.mobileassistant.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange.TAB_CHANGE_STATE;
+import com.handsomezhou.mobileassistant.adapter.TelephoneFragmentPagerAdapter;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
-import com.handsomezhou.mobileassistant.view.ContactsOperationView;
+import com.handsomezhou.mobileassistant.view.CustomViewPager;
 import com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView;
 import com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView.OnT9TelephoneDialpadView;
 
@@ -17,36 +23,74 @@ import com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView.OnT9Telephon
 
 public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDialpadView{
 	private static final String TAG="TelephoneFragment";
+	private List<Fragment> mFragments;
+	private CustomViewPager mCustomViewPager;
+	private TelephoneFragmentPagerAdapter mTelephoneFragmentPagerAdapter;
+	
 	private T9TelephoneDialpadView mT9TelephoneDialpadView;
-	private ContactsOperationView mContactsOperationView;
+	
+	/*private CallLogFragment mCallLogFragment;
+	private ContactsT9Fragment mContactsT9Fragment;*/
 
 	@Override
 	protected void initData() {
 		setContext(getActivity().getApplicationContext());
+		mFragments=new ArrayList<Fragment>();
+		if(null!=mFragments){
+			
+			
+			Fragment contactsT9Fragment=new ContactsT9Fragment();
+			if(null!=contactsT9Fragment){
+				mFragments.add(contactsT9Fragment);
+			}
+			
+			Fragment callLogFragment = new CallLogFragment();
+			if (null != callLogFragment) {
+				mFragments.add(callLogFragment);
+			}
+		}
+		
 	}
 
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
 		View view=inflater.inflate(R.layout.fragment_telephone, container, false);
 		/*mTelephoneBtn=(Button) view.findViewById(R.id.telephone_btn);*/
+		mCustomViewPager=(CustomViewPager)view.findViewById(R.id.custom_view_pager_telephone);
+		mCustomViewPager.setPagingEnabled(true);
+		
 		mT9TelephoneDialpadView=(T9TelephoneDialpadView) view.findViewById(R.id.t9_telephone_dialpad_layout);
 		mT9TelephoneDialpadView.setOnT9TelephoneDialpadView(this);
-		mContactsOperationView=(ContactsOperationView)view.findViewById(R.id.contacts_operation_layout);
+
 		return view;
 	}
 
 	@Override
 	protected void initListener() {
-		/*if(null!=mTelephoneBtn){
-			mTelephoneBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(getActivity().getApplicationContext(),getContext().getResources().getString(R.string.telephone) , Toast.LENGTH_SHORT).show();
-				}
-			});
-		}*/
+		FragmentManager fm=getActivity().getSupportFragmentManager();
+		mTelephoneFragmentPagerAdapter=new TelephoneFragmentPagerAdapter(fm, mFragments);
+		mCustomViewPager.setAdapter(mTelephoneFragmentPagerAdapter);
 		
+		mCustomViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int pos) {
+				//mCustomViewPager.setCurrentItem(pos);
+				
+			}
+			
+			@Override
+			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	/*Start: OnT9TelephoneDialpadView*/
@@ -88,10 +132,16 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
         
         if(TextUtils.isEmpty(curCharacter)){
             ContactsHelper.getInstance().parseT9InputSearchContacts(null);
+            mCustomViewPager.setCurrentItem(0);
         }else{
             ContactsHelper.getInstance().parseT9InputSearchContacts(curCharacter);
+            mCustomViewPager.setCurrentItem(1);
         }
-        mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter)); 
+        
+        
+        
+        //mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter)); 
+        
     }
     
 	public void  updateView(TAB_CHANGE_STATE tabChangeState){	    

@@ -39,10 +39,10 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsLo
 		mSearchEt=(EditText)view.findViewById(R.id.search_edit_text);
 		mContactsOperationView = (ContactsOperationView)view.findViewById(R.id.contacts_operation_layout);
 		mContactsOperationView.setOnContactsOperationView(this);
-		boolean startLoad = ContactsHelper.getInstance().startLoadContacts();
+		/*boolean startLoad = ContactsHelper.getInstance().startLoadContacts();
 		if (true == startLoad) {
 			mContactsOperationView.contactsLoading();
-		}
+		}*/
 		return view;
 	}
 
