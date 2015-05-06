@@ -11,6 +11,7 @@
     <string name="more">更多</string>
     <!-- Start: More tag -->
     <string name="phone_info">手机信息</string>
+    <string name="app_search">应用搜索</string>
     <string name="setting">设置</string>
     <string name="about">关于</string>
     <!-- End: More tag -->

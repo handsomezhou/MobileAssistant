@@ -23,6 +23,9 @@ import com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView.OnT9Telephon
 
 public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDialpadView{
 	private static final String TAG="TelephoneFragment";
+	private static final int FRAGMENT_INDEX_CALL_LOG=0;
+	private static final int FRAGMENT_INDEX_CONTACTS_T9=1;
+	
 	private List<Fragment> mFragments;
 	private CustomViewPager mCustomViewPager;
 	private TelephoneFragmentPagerAdapter mTelephoneFragmentPagerAdapter;
@@ -39,15 +42,16 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 		if(null!=mFragments){
 			
 			
+			Fragment callLogFragment = new CallLogFragment();
+			if (null != callLogFragment) {
+				mFragments.add(callLogFragment);
+			}
+			
 			Fragment contactsT9Fragment=new ContactsT9Fragment();
 			if(null!=contactsT9Fragment){
 				mFragments.add(contactsT9Fragment);
 			}
 			
-			Fragment callLogFragment = new CallLogFragment();
-			if (null != callLogFragment) {
-				mFragments.add(callLogFragment);
-			}
 		}
 		
 	}
@@ -57,7 +61,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 		View view=inflater.inflate(R.layout.fragment_telephone, container, false);
 		/*mTelephoneBtn=(Button) view.findViewById(R.id.telephone_btn);*/
 		mCustomViewPager=(CustomViewPager)view.findViewById(R.id.custom_view_pager_telephone);
-		mCustomViewPager.setPagingEnabled(true);
+		mCustomViewPager.setPagingEnabled(false);
 		
 		mT9TelephoneDialpadView=(T9TelephoneDialpadView) view.findViewById(R.id.t9_telephone_dialpad_layout);
 		mT9TelephoneDialpadView.setOnT9TelephoneDialpadView(this);
@@ -67,7 +71,8 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 
 	@Override
 	protected void initListener() {
-		FragmentManager fm=getActivity().getSupportFragmentManager();
+		//FragmentManager fm=getActivity().getSupportFragmentManager();
+		FragmentManager fm=getChildFragmentManager();
 		mTelephoneFragmentPagerAdapter=new TelephoneFragmentPagerAdapter(fm, mFragments);
 		mCustomViewPager.setAdapter(mTelephoneFragmentPagerAdapter);
 		
@@ -132,13 +137,11 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
         
         if(TextUtils.isEmpty(curCharacter)){
             ContactsHelper.getInstance().parseT9InputSearchContacts(null);
-            mCustomViewPager.setCurrentItem(0);
+            mCustomViewPager.setCurrentItem(FRAGMENT_INDEX_CALL_LOG);
         }else{
             ContactsHelper.getInstance().parseT9InputSearchContacts(curCharacter);
-            mCustomViewPager.setCurrentItem(1);
+            mCustomViewPager.setCurrentItem(FRAGMENT_INDEX_CONTACTS_T9);
         }
-        
-        
         
         //mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter)); 
         
@@ -165,5 +168,36 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 		}
 	}
 
+	public void callLogLoadSuccess(){
+		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
+		if(callLogFragment instanceof CallLogFragment){
+			((CallLogFragment) callLogFragment).updateView();
+		}
+		return;
+	}
+	
+	public void callLogLoadFailed(){
+		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
+		if(callLogFragment instanceof CallLogFragment){
+			((CallLogFragment) callLogFragment).updateView();
+		}
+		return;
+	}
+	
+	public void contactsLoadSuccess(){
+		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
+		if(contactsT9Fragment instanceof ContactsT9Fragment){
+			((ContactsT9Fragment) contactsT9Fragment).updateView();
+		}
+		return;
+	}
+	
+	public void contactsLoadFailed(){
+		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
+		if(contactsT9Fragment instanceof ContactsT9Fragment){
+			((ContactsT9Fragment) contactsT9Fragment).updateView();
+		}
+		return;
+	}
 	
 }

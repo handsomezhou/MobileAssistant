@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange;
 import com.handsomezhou.mobileassistant.adapter.AddressBookFragmentPagerAdapter;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
+import com.handsomezhou.mobileassistant.helper.CallRecordHelper.OnCallLogLoad;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
+import com.handsomezhou.mobileassistant.helper.ContactsHelper.OnContactsLoad;
 import com.handsomezhou.mobileassistant.model.AddressBookView;
 import com.handsomezhou.mobileassistant.model.IconButtonData;
 import com.handsomezhou.mobileassistant.model.IconButtonValue;
@@ -24,7 +27,8 @@ import com.handsomezhou.mobileassistant.service.MobileAssistantService;
 import com.handsomezhou.mobileassistant.view.BottomTabView;
 import com.handsomezhou.mobileassistant.view.CustomViewPager;
 
-public class AddressBookFragment extends BaseFragment implements OnTabChange{	
+public class AddressBookFragment extends BaseFragment implements OnTabChange,OnCallLogLoad,OnContactsLoad{
+	private static final String TAG="AddressBookFragment";
 	private List<AddressBookView> mAddressBookViews;
 	private BottomTabView mBottomTabView;
 	private CustomViewPager mCustomViewPager;
@@ -62,12 +66,17 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 		mAddressBookViews.add(moreAddressBookView);
 		/*End: contacts view*/
 		
+		CallRecordHelper.getInstance().setOnCallLogLoad(this);
+		CallRecordHelper.getInstance().startLoadCallRecord();
+		
+		ContactsHelper.getInstance().setOnContactsLoad(this);
+		ContactsHelper.getInstance().startLoadContacts();
+		
 		Intent  intent=new Intent(getContext(), MobileAssistantService.class);
 		intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
 		getContext().startService(intent);
 		
-		CallRecordHelper.getInstance().startLoadCallRecord();
-		ContactsHelper.getInstance().startLoadContacts();
+	
 		
 	}
 
@@ -141,8 +150,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 	
 	@Override
 	public void onStart() {
-		ContactsHelper.getInstance().startLoadContacts();//restart load contacts when contacts has been changed
-		CallRecordHelper.getInstance().startLoadCallRecord();//restart load callLog when callLog has been changed
+		//ContactsHelper.getInstance().startLoadContacts();//restart load contacts when contacts has been changed
+		//CallRecordHelper.getInstance().startLoadCallRecord();//restart load callLog when callLog has been changed
 		super.onStart();
 	}
 
@@ -172,6 +181,58 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 		}
 	}
 	/*End: OnTabChange*/
+	
+	/*Start : OnCallLogLoad*/
+	@Override
+	public void onCallLogLoadSuccess() {
+		Log.i(TAG, "onCallLogLoadSuccess size"+CallRecordHelper.getInstance().getBaseCallRecord().size());
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).callLogLoadSuccess();
+		}
+		
+	}
+
+	@Override
+	public void onCallLogLoadFailed() {
+		Log.i(TAG, "onCallLogLoadFailed size"+CallRecordHelper.getInstance().getBaseCallRecord().size());
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).callLogLoadFailed();
+		}
+	}
+	/*End : OnCallLogLoad*/
+	
+	/*Start : OnContactsLoad*/
+	@Override
+	public void onContactsLoadSuccess() {
+		Log.i(TAG, "onContactsLoadSuccess size"+ContactsHelper.getInstance().getBaseContacts().size());
+		
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).contactsLoadSuccess();
+		}
+		
+		Fragment contactsQwertyFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CONTACTS)).getFragment();
+		if(contactsQwertyFragment instanceof ContactsQwertyFragment){
+			((ContactsQwertyFragment) contactsQwertyFragment).contactsLoadSuccess();
+		}
+	}
+
+	@Override
+	public void onContactsLoadFailed() {
+		Log.i(TAG, "onContactsLoadFailed size"+ContactsHelper.getInstance().getBaseContacts().size());
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).contactsLoadFailed();
+		}
+		
+		Fragment contactsQwertyFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CONTACTS)).getFragment();
+		if(contactsQwertyFragment instanceof ContactsQwertyFragment){
+			((ContactsQwertyFragment) contactsQwertyFragment).contactsLoadFailed();
+		}
+	}
+	/*End : OnContactsLoad*/
 	
 	private void changeToTab(Object fromTab, Object toTab,TAB_CHANGE_STATE tabChangeState){
 	    if(null==toTab){
@@ -214,5 +275,6 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
 	
 		return item;
 	}
+
 
 }

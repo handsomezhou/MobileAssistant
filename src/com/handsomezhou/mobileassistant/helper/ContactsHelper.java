@@ -143,23 +143,26 @@ public class ContactsHelper {
 	 * @return start load success return true, otherwise return false
 	 */
 	public boolean startLoadContacts() {
+	
 		if (true == isSearching()) {
 			return false;
 		}
-
+		
 		if (false == isContactsChanged()) {
 			return false;
 		}
-
+	
 		mLoadTask = new AsyncTask<Object, Object,List<Contacts>>() {
 
 			@Override
 			protected List<Contacts> doInBackground(Object... params) {
+				
 				return loadContacts(mContext);
 			}
 
 			@Override
 			protected void onPostExecute(List<Contacts> result) {
+				
 				parseContacts(result);
 				super.onPostExecute(result);
 				setContactsChanged(false);
@@ -667,10 +670,12 @@ public class ContactsHelper {
 	}
 	
 	private void parseContacts(List<Contacts> contacts) {
+		
 		if (null == contacts || contacts.size() < 1) {
 			if (null != mOnContactsLoad) {
 				mOnContactsLoad.onContactsLoadFailed();
 			}
+			
 			return;
 		}
 
@@ -682,6 +687,7 @@ public class ContactsHelper {
 
 		if (null != mOnContactsLoad) {
 			mOnContactsLoad.onContactsLoadSuccess();
+			
 		}
 
 		return;

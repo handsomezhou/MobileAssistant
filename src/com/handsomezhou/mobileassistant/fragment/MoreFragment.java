@@ -23,6 +23,7 @@ public class MoreFragment extends BaseFragment {
 	
 	public enum MORE_TAG{
 		PHONE_INFO,
+		APP_SEARCH,
 		SETTING,
 		ABOUT,
 		
@@ -38,6 +39,12 @@ public class MoreFragment extends BaseFragment {
 		IconButtonData phoneInfoIconButtonData=new IconButtonData(getContext(), phoneInfoIconButtonValue);
 		mMoreData.add(phoneInfoIconButtonData);
 		/*End : phone info*/
+		
+		/*Start : app search*/
+		IconButtonValue appSearchIconButtonValue=new IconButtonValue(MORE_TAG.APP_SEARCH, R.drawable.app_search, R.string.app_search);
+		IconButtonData appSearchIconButtonData=new IconButtonData(getContext(), appSearchIconButtonValue);
+		mMoreData.add(appSearchIconButtonData);
+		/*End : app search*/
 		
 		/*Start : setting*/
 		IconButtonValue settingIconButtonValue=new IconButtonValue(MORE_TAG.SETTING, R.drawable.setting, R.string.setting);
@@ -85,6 +92,9 @@ public class MoreFragment extends BaseFragment {
 
 		case PHONE_INFO:
 
+			break;
+		case APP_SEARCH:
+			
 			break;
 		case SETTING:
 

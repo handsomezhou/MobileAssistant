@@ -21,7 +21,7 @@ import com.handsomezhou.mobileassistant.util.ShareUtil;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView.OnContactsOperationView;
 
-public class ContactsQwertyFragment extends BaseFragment implements OnContactsLoad,OnContactsOperationView{
+public class ContactsQwertyFragment extends BaseFragment implements OnContactsOperationView{
 	private static final String TAG="ContactsFragment";
 	private EditText mSearchEt;
 	private ContactsOperationView mContactsOperationView;
@@ -30,7 +30,7 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsLo
 	@Override
 	protected void initData() {
 		setContext(getActivity());
-		ContactsHelper.getInstance().setOnContactsLoad(this);
+		//ContactsHelper.getInstance().setOnContactsLoad(this);
 	}
 
 	@Override
@@ -70,23 +70,15 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsLo
 		});
 	}
 	
-    /*start:OnContactsLoad*/
-	@Override
-	public void onContactsLoadSuccess() {
+	public void contactsLoadSuccess(){
 		ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
 		mContactsOperationView.contactsLoadSuccess();
-		
-		//just background printing contacts information
-		//ContactsHelper.getInstance().showContactsInfo();
 		ContactsIndexHelper.getInstance().praseContacts(ContactsHelper.getInstance().getBaseContacts());
-		//ContactsIndexHelper.getInstance().showContactsInfo();
 	}
-
-	@Override
-	public void onContactsLoadFailed() {
+	
+	public void contactsLoadFailed(){
 		mContactsOperationView.contactsLoadFailed();
 	}
-	/*end:OnContactsLoad*/
 
 	/*start:OnContactsOperationView*/
 	@Override
