@@ -25,6 +25,22 @@
         <activity
             android:name="com.handsomezhou.mobileassistant.activity.MainActivity"
             android:label="@string/app_name"
+            android:process=":process.main"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateUnspecified" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.handsomezhou.mobileassistant.activity.AppSearchActivity"
+            android:icon="@drawable/app_search"
+            android:label="@string/app_search"
+            android:launchMode="singleInstance"
+            android:process=":process.sub"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateUnspecified" >

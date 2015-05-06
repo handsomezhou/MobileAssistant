@@ -3,6 +3,7 @@ package com.handsomezhou.mobileassistant.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
+import com.handsomezhou.mobileassistant.activity.AppSearchActivity;
 import com.handsomezhou.mobileassistant.adapter.MoreAdapter;
 import com.handsomezhou.mobileassistant.model.IconButtonData;
 import com.handsomezhou.mobileassistant.model.IconButtonValue;
@@ -94,7 +96,7 @@ public class MoreFragment extends BaseFragment {
 
 			break;
 		case APP_SEARCH:
-			
+			enterAppSearch();
 			break;
 		case SETTING:
 
@@ -110,4 +112,9 @@ public class MoreFragment extends BaseFragment {
 	        Toast.makeText(getContext(), iconButtonData.getIconButtonValue().getTag().toString(),
 	                Toast.LENGTH_SHORT).show();
 	    }
+	 
+	 private void enterAppSearch(){
+		 Intent intent=new Intent(getContext(), AppSearchActivity.class);
+		 startActivity(intent);
+	 }
 }
