@@ -39,7 +39,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange{
     
 	@Override
 	protected void initData() {
-		setContext(getActivity().getApplicationContext());
+		setContext(getActivity());
 		mAddressBookViews=new ArrayList<AddressBookView>();
 		
 		/*Start: call view*/

@@ -30,7 +30,7 @@ public class MoreFragment extends BaseFragment {
 	
 	@Override
 	protected void initData() {
-		setContext(getActivity().getApplicationContext());
+		setContext(getActivity());
 		mMoreData=new ArrayList<IconButtonData>();
 		
 		/*Start : phone info*/

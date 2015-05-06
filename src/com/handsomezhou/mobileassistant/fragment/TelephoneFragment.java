@@ -34,7 +34,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 
 	@Override
 	protected void initData() {
-		setContext(getActivity().getApplicationContext());
+		setContext(getActivity());
 		mFragments=new ArrayList<Fragment>();
 		if(null!=mFragments){
 			

@@ -15,7 +15,7 @@ public class SmsFragment extends BaseFragment {
 	private EditText mSmsEt;
 	@Override
 	protected void initData() {
-		setContext(getActivity().getApplicationContext());
+		setContext(getActivity());
 	}
 
 	@Override
