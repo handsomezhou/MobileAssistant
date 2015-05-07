@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name="com.handsomezhou.mobileassistant.activity.AppSearchActivity"
-            android:icon="@drawable/app_search"
+            android:icon="@drawable/ic_launcher_app_search"
             android:label="@string/app_search"
             android:launchMode="singleInstance"
             android:process=":process.sub"
