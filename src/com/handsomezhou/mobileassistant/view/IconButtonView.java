@@ -16,16 +16,19 @@ public class IconButtonView extends RelativeLayout {
     private Context mContext;
     private ImageView mIconIv;
     private TextView mTitleTv;
-   
-    public IconButtonView(Context context) {
+  
+  
+	public IconButtonView(Context context) {
         super(context);
         mContext=context;
+        initData();
         initView();
     }
 
     public IconButtonView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
+        initData();
         initView();
     }
 
@@ -44,7 +47,11 @@ public class IconButtonView extends RelativeLayout {
     public void setTitleTv(TextView titleTv) {
         mTitleTv = titleTv;
     }
-    
+
+	private void initData(){
+		
+	}
+	
     private void initView(){
     	 this.removeAllViews();
         

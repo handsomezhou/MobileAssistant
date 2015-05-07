@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange.TAB_CHANGE_STATE;
 import com.handsomezhou.mobileassistant.model.IconButtonData;
+import com.handsomezhou.mobileassistant.model.IconButtonValue;
 
 public class BottomTabView extends LinearLayout implements OnClickListener{
     private static final int PADDING_DEFAULT=0;
@@ -63,7 +65,7 @@ public class BottomTabView extends LinearLayout implements OnClickListener{
 	    }
 	    
 	    mIconButtonData.add(iconButtonData);
-	    addIconButtonView(mIconButtonData.get(mIconButtonData.size()-1).getIconButtonView());
+	    addIconButtonView(mIconButtonData.get(mIconButtonData.size()-1).getIconButtonView(),mIconButtonData.get(mIconButtonData.size()-1).getIconButtonValue());
 	    setCurrentTab(mIconButtonData.get(0).getIconButtonValue().getTag());
 	    mIconButtonData.get(0).getIconButtonView().getIconIv().setBackgroundResource( mIconButtonData.get(0).getIconButtonValue().getIconSelectedFocused());
 	    setLastIconResId(mIconButtonData.get(0).getIconButtonValue().getIconSelectedFocused());
@@ -143,13 +145,21 @@ public class BottomTabView extends LinearLayout implements OnClickListener{
 	}
 
 
-	private void addIconButtonView(IconButtonView iconButtonView){
-	    if(null==iconButtonView){
+	private void addIconButtonView(IconButtonView iconButtonView, IconButtonValue iconButtonValue){
+	    if((null==iconButtonView)||(null==iconButtonValue)){
 	        return;
 	    }
-	    LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0f);
+	 
+	   // LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, weight);
+	    LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, iconButtonValue.getWeight());
         lp.setMargins(MARGIN_LEFT_DEFAULT, MARGIN_TOP_DEFAULT, MARGIN_RIGHT_DEFAULT, MARGIN_BOTTOM_DEFAULT);
+        lp.gravity=Gravity.CENTER;
+        iconButtonView.getIconIv().setVisibility(iconButtonValue.getIconVisibility());
+        iconButtonView.getTitleTv().setVisibility(iconButtonValue.getTextVisibility());
         iconButtonView.setLayoutParams(lp);
+        iconButtonView.setBackgroundResource(iconButtonValue.getBackgroundResource());
+       
+        
         this.addView(iconButtonView);
 	}
 	

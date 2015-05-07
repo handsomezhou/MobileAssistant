@@ -5,16 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <com.handsomezhou.mobileassistant.view.BottomTabView
-        android:id="@+id/bottom_tab_view"
+    <FrameLayout
+        android:id="@+id/bottom_tab_view_layout"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <com.handsomezhou.mobileassistant.view.BottomTabView
+            android:id="@+id/bottom_tab_view"
+            android:layout_width="match_parent"
+            android:layout_height="54dp" />
+
+        <com.handsomezhou.mobileassistant.view.BottomTabView
+            android:id="@+id/bottom_tab_call_view"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <com.handsomezhou.mobileassistant.view.CustomViewPager
         android:id="@+id/custom_view_pager_address_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_tab_view" />
+        android:layout_above="@id/bottom_tab_view_layout" />
 
 </RelativeLayout>

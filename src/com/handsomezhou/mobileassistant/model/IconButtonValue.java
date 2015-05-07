@@ -1,6 +1,12 @@
 
 package com.handsomezhou.mobileassistant.model;
 
+import com.handsomezhou.mobileassistant.R;
+
+import android.view.View;
+import android.widget.LinearLayout;
+
+
 /**
  * custom IconButton's value
  * 
@@ -13,8 +19,15 @@ public class IconButtonValue {
     private int mIconSelectedFocused;   // selected_focused Icon
     private int mIconUnselected;        // unselected Icon
     private int mText;// text
+    /**
+     * {@link LinearLayout.LayoutParams}
+     */
+    private float mWeight;
+    private int mBackgroundResource;
+    private int mIconVisibility;
+	private int mTextVisibility;
 
-    public IconButtonValue(Object tag, int iconSelectedUnfocused, int text) {
+	public IconButtonValue(Object tag, int iconSelectedUnfocused, int text) {
         super();
         initViewOption(tag, iconSelectedUnfocused, iconSelectedUnfocused, iconSelectedUnfocused, text);
     }
@@ -29,14 +42,7 @@ public class IconButtonValue {
         super();
         initViewOption(tag, iconSelectedUnfocused, iconSelectedFocused, iconUnselected, text);
     }
-
-    private void initViewOption (Object tag,int iconSelectedUnfocused, int iconSelectedFocused, int iconUnselected, int text){
-        setTag(tag);
-        setIconSelectedUnfocused(iconSelectedUnfocused);
-        setIconSelectedFocused(iconSelectedFocused);
-        setIconUnselected(iconUnselected);
-        setText(text);
-    }
+    
     public Object getTag() {
         return mTag;
     }
@@ -76,4 +82,50 @@ public class IconButtonValue {
     public void setText(int text) {
         mText = text;
     }
+    
+    public float getWeight() {
+ 		return mWeight;
+ 	}
+
+ 	public void setWeight(float weight) {
+ 		mWeight = weight;
+ 	}
+ 	
+ 	public int getBackgroundResource() {
+		return mBackgroundResource;
+	}
+
+	public void setBackgroundResource(int backgroundResource) {
+		mBackgroundResource = backgroundResource;
+	}
+ 	
+	public int getIconVisibility() {
+		return mIconVisibility;
+	}
+
+	public void setIconVisibility(int iconVisibility) {
+		mIconVisibility = iconVisibility;
+	}
+
+	public int getTextVisibility() {
+		return mTextVisibility;
+	}
+
+	public void setTextVisibility(int textVisibility) {
+		mTextVisibility = textVisibility;
+	}
+
+		
+ 	 private void initViewOption(Object tag,int iconSelectedUnfocused, int iconSelectedFocused, int iconUnselected, int text){
+         setTag(tag);
+         setIconSelectedUnfocused(iconSelectedUnfocused);
+         setIconSelectedFocused(iconSelectedFocused);
+         setIconUnselected(iconUnselected);
+         setText(text);
+         setWeight(1.0f);
+         setBackgroundResource(R.color.transparent);
+         setIconVisibility(View.VISIBLE);
+         setTextVisibility(View.VISIBLE);
+     }
+ 	 
 }

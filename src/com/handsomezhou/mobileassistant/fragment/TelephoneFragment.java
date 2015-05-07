@@ -31,7 +31,11 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	private TelephoneFragmentPagerAdapter mTelephoneFragmentPagerAdapter;
 	
 	private T9TelephoneDialpadView mT9TelephoneDialpadView;
+	private OnTelephoneDialChange mOnTelephoneDialChange;
 	
+	public interface OnTelephoneDialChange{
+		void onPhoneNumberChange(String phoneNumber);
+	}
 	/*private CallLogFragment mCallLogFragment;
 	private ContactsT9Fragment mContactsT9Fragment;*/
 
@@ -114,6 +118,9 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
     @Override
     public void onDialInputTextChanged(String curCharacter) {
         updateSearch(curCharacter);   
+        if(null!=mOnTelephoneDialChange){
+        	mOnTelephoneDialChange.onPhoneNumberChange(curCharacter);
+        }
     }
 
     @Override
@@ -123,6 +130,15 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
     }
     /*End: OnT9TelephoneDialpadView*/
 
+    public OnTelephoneDialChange getOnTelephoneDialChange() {
+		return mOnTelephoneDialChange;
+	}
+
+	public void setOnTelephoneDialChange(OnTelephoneDialChange onTelephoneDialChange) {
+		mOnTelephoneDialChange = onTelephoneDialChange;
+	}
+
+	
     public void updateSearch(){  
         updateSearch(mT9TelephoneDialpadView.getT9Input());
     }

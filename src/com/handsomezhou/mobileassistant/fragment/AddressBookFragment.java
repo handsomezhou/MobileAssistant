@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange;
 import com.handsomezhou.mobileassistant.adapter.AddressBookFragmentPagerAdapter;
+import com.handsomezhou.mobileassistant.fragment.TelephoneFragment.OnTelephoneDialChange;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper.OnCallLogLoad;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
@@ -24,13 +27,15 @@ import com.handsomezhou.mobileassistant.model.AddressBookView;
 import com.handsomezhou.mobileassistant.model.IconButtonData;
 import com.handsomezhou.mobileassistant.model.IconButtonValue;
 import com.handsomezhou.mobileassistant.service.MobileAssistantService;
+import com.handsomezhou.mobileassistant.util.ViewUtil;
 import com.handsomezhou.mobileassistant.view.BottomTabView;
 import com.handsomezhou.mobileassistant.view.CustomViewPager;
 
-public class AddressBookFragment extends BaseFragment implements OnTabChange,OnCallLogLoad,OnContactsLoad{
+public class AddressBookFragment extends BaseFragment implements OnTabChange,OnCallLogLoad,OnContactsLoad,OnTelephoneDialChange{
 	private static final String TAG="AddressBookFragment";
 	private List<AddressBookView> mAddressBookViews;
-	private BottomTabView mBottomTabView;
+	private BottomTabView mBottomTabView;//without call
+	private BottomTabView mBottomTabCallView;//with call 
 	private CustomViewPager mCustomViewPager;
 	private AddressBookFragmentPagerAdapter mAddressBookFragmentPagerAdapter;
 	   
@@ -41,13 +46,21 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
         MORE,
     }
     
+    public enum BOTTOM_TAB_CALL_TAG{
+        HIDE,
+        DIAL,
+        DELETE,
+    }
+    
 	@Override
 	protected void initData() {
 		setContext(getActivity());
 		mAddressBookViews=new ArrayList<AddressBookView>();
 		
 		/*Start: call view*/
-		AddressBookView callAddressBookView=new AddressBookView(BOTTOM_TAB_TAG.CALL, new TelephoneFragment());
+		TelephoneFragment telephoneFragment=new TelephoneFragment();
+		telephoneFragment.setOnTelephoneDialChange(this);
+		AddressBookView callAddressBookView=new AddressBookView(BOTTOM_TAB_TAG.CALL, telephoneFragment);
 		mAddressBookViews.add(callAddressBookView);
 		/*End: call view*/
 		
@@ -86,6 +99,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 		mCustomViewPager=(CustomViewPager)view.findViewById(R.id.custom_view_pager_address_book);
 		mCustomViewPager.setPagingEnabled(true);
 		
+		/*Start : BOTTOM_TAB_TAG*/
 	    mBottomTabView=(BottomTabView) view.findViewById(R.id.bottom_tab_view);
 	    mBottomTabView.removeAllViews();
 	    /*Start: call tab*/
@@ -112,6 +126,40 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
         mBottomTabView.addIconButtonData(moreIconBtnData);
         /*End: more tab*/
         mBottomTabView.setOnTabChange(this);
+        /*End : BOTTOM_TAB_TAG*/
+        
+        /*Start :BOTTOM_TAB_CALL_TAG*/
+        mBottomTabCallView=(BottomTabView) view.findViewById(R.id.bottom_tab_call_view);
+        mBottomTabCallView.removeAllViews();
+        
+        /*Start: hide tab*/
+	    IconButtonValue hideIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.HIDE,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+	    IconButtonData hideIconBtnData=new IconButtonData(getContext(), hideIconBtnValue);
+	    mBottomTabCallView.addIconButtonData(hideIconBtnData);
+	    /*End: hide tab*/
+	    
+	    /*Start: dial tab*/
+	    IconButtonValue dialIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DIAL,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+	    dialIconBtnValue.setWeight(2.0f);
+	    dialIconBtnValue.setBackgroundResource(R.color.deep_sky_blue);
+	    dialIconBtnValue.setTextVisibility(View.GONE);
+	    IconButtonData dialIconBtnData=new IconButtonData(getContext(), dialIconBtnValue);
+	    mBottomTabCallView.addIconButtonData(dialIconBtnData);
+	    /*End: dial tab*/
+	    
+	    /*Start: delete tab*/
+	    IconButtonValue deleteIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DELETE,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+	    IconButtonData deleteIconBtnData=new IconButtonData(getContext(), deleteIconBtnValue);
+	    mBottomTabCallView.addIconButtonData(deleteIconBtnData);
+	    /*End: delete tab*/
+	    mBottomTabCallView.setOnTabChange(this);
+	    /*Start: contacts tab*/
+      /*  IconButtonValue contactsIconBtnValue=new IconButtonValue(BOTTOM_TAB_TAG.CONTACTS,R.drawable.contacts_icon_selected_unfocused, R.drawable.contacts_icon_unselected, R.string.contacts);
+        IconButtonData contactsIconBtnData=new IconButtonData(getContext(), contactsIconBtnValue);
+        mBottomTabView.addIconButtonData(contactsIconBtnData);*/
+        /*End: contacts tab*/
+        /*End :BOTTOM_TAB_CALL_TAG*/
+
 		return view;
 	}
 
@@ -160,24 +208,45 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	public void onChangeToTab(Object fromTab, Object toTab,
 			TAB_CHANGE_STATE tabChangeState) {
 		//Toast.makeText(getContext(), "onChangeToTab"+"["+fromTab.toString()+"]["+toTab.toString()+"]tabChangeState["+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
-		int item=getAddressBookViewItem(toTab);
-		mCustomViewPager.setCurrentItem(item);
-		changeToTab(fromTab, toTab, tabChangeState);
+		if(toTab instanceof BOTTOM_TAB_TAG){
+			int item=getAddressBookViewItem(toTab);
+			mCustomViewPager.setCurrentItem(item);
+			changeToTab(fromTab, toTab, tabChangeState);
+		}else if(toTab instanceof BOTTOM_TAB_CALL_TAG){
+			Toast.makeText(getContext(), fromTab.toString()+"->"+toTab.toString(), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
 	public void onClickTab(Object currentTab, TAB_CHANGE_STATE tabChangeState) {
 		//Toast.makeText(getContext(), "onClickTab"+"["+currentTab.toString()+"]tabChangeState¡¾"+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
-		Fragment fragment=mAddressBookViews.get(getAddressBookViewItem(currentTab)).getFragment();
-		switch ((BOTTOM_TAB_TAG)currentTab) {
-		case CALL:
-			if(fragment instanceof TelephoneFragment){
-				((TelephoneFragment) fragment).updateView(tabChangeState);
+		if(currentTab instanceof BOTTOM_TAB_TAG){
+			Fragment fragment=mAddressBookViews.get(getAddressBookViewItem(currentTab)).getFragment();
+			switch ((BOTTOM_TAB_TAG)currentTab) {
+			case CALL:
+				if(fragment instanceof TelephoneFragment){
+					((TelephoneFragment) fragment).updateView(tabChangeState);
+				}
+				break;
+	
+			default:
+				break;
 			}
-			break;
-
-		default:
-			break;
+		}else if(currentTab instanceof BOTTOM_TAB_CALL_TAG){
+			Toast.makeText(getContext(), currentTab.toString(), Toast.LENGTH_SHORT).show();
+			/*Fragment fragment=mAddressBookViews.get(getAddressBookViewItem(currentTab)).getFragment();
+			switch ((BOTTOM_TAB_CALL_TAG)currentTab) {
+			case HIDE:
+				if(fragment instanceof TelephoneFragment){
+					((TelephoneFragment) fragment).updateView(tabChangeState);
+				}
+				ViewUtil.hideView(mBottomTabCallView);
+				ViewUtil.showView(mBottomTabView);
+				break;
+	
+			default:
+				break;
+			}*/
 		}
 	}
 	/*End: OnTabChange*/
@@ -234,6 +303,21 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	}
 	/*End : OnContactsLoad*/
 	
+	/*Start : OnTelephoneDialChange*/
+	@Override
+	public void onPhoneNumberChange(String phoneNumber) {
+		if(TextUtils.isEmpty(phoneNumber)){
+			ViewUtil.hideView(mBottomTabCallView);
+			ViewUtil.showView(mBottomTabView);
+			
+		}else{
+			ViewUtil.hideView(mBottomTabView);
+			ViewUtil.showView(mBottomTabCallView);
+		}
+	}
+	
+	/*End : OnTelephoneDialChange*/
+	
 	private void changeToTab(Object fromTab, Object toTab,TAB_CHANGE_STATE tabChangeState){
 	    if(null==toTab){
 	        return;
@@ -275,6 +359,5 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	
 		return item;
 	}
-
 
 }
