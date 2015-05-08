@@ -47,7 +47,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
     }
     
     public enum BOTTOM_TAB_CALL_TAG{
-        HIDE,
+        CALL,
         DIAL,
         DELETE,
     }
@@ -132,14 +132,14 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
         mBottomTabCallView=(BottomTabView) view.findViewById(R.id.bottom_tab_call_view);
         mBottomTabCallView.removeAllViews();
         
-        /*Start: hide tab*/
-	    IconButtonValue hideIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.HIDE,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+        /*Start: call tab*/
+	    IconButtonValue hideIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.CALL,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.string.call);
 	    IconButtonData hideIconBtnData=new IconButtonData(getContext(), hideIconBtnValue);
 	    mBottomTabCallView.addIconButtonData(hideIconBtnData);
-	    /*End: hide tab*/
+	    /*End: call tab*/
 	    
 	    /*Start: dial tab*/
-	    IconButtonValue dialIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DIAL,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+	    IconButtonValue dialIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DIAL,R.drawable.dial_icon, R.string.call);
 	    dialIconBtnValue.setWeight(2.0f);
 	    dialIconBtnValue.setBackgroundResource(R.color.deep_sky_blue);
 	    dialIconBtnValue.setTextVisibility(View.GONE);
@@ -148,7 +148,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	    /*End: dial tab*/
 	    
 	    /*Start: delete tab*/
-	    IconButtonValue deleteIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DELETE,R.drawable.call_icon_selected_unfocused,R.drawable.call_icon_selected_focused, R.drawable.call_icon_unselected, R.string.call);
+	    IconButtonValue deleteIconBtnValue=new IconButtonValue(BOTTOM_TAB_CALL_TAG.DELETE,R.drawable.delete_icon, R.string.delete);
 	    IconButtonData deleteIconBtnData=new IconButtonData(getContext(), deleteIconBtnValue);
 	    mBottomTabCallView.addIconButtonData(deleteIconBtnData);
 	    /*End: delete tab*/
@@ -168,7 +168,7 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 		FragmentManager fm=getActivity().getSupportFragmentManager();
 		mAddressBookFragmentPagerAdapter=new AddressBookFragmentPagerAdapter(fm, mAddressBookViews);
 		mCustomViewPager.setAdapter(mAddressBookFragmentPagerAdapter);
-		
+		mCustomViewPager.setPagingEnabled(false);
 		mCustomViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			
 			@Override

@@ -91,16 +91,28 @@
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_height"
             android:layout_marginLeft="@dimen/margin_left"
-            android:background="@drawable/call_icon"
+            android:layout_marginRight="@dimen/margin_right"
+            android:background="@drawable/call"
             android:contentDescription="@string/app_name" />
 
         <ImageView
             android:id="@+id/sms_image_view"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_height"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/index_view_width"
-            android:background="@drawable/sms_icon"
+            android:layout_toRightOf="@id/call_image_view"
+            android:background="@drawable/sms"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/copy_image_view"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/index_view_width"
+            android:background="@drawable/copy"
             android:contentDescription="@string/app_name" />
     </RelativeLayout>
 

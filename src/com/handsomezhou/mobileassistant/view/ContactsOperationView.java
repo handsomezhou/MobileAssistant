@@ -51,6 +51,7 @@ public class ContactsOperationView extends FrameLayout implements
 		void onRemoveContactsSelected(Contacts contacts);
 		void onContactsCall(Contacts contacts);
 		void onContactsSms(Contacts contacts);
+		void onContactsCopy(Contacts contacts);
 	}
 	
 	final Handler handler = new Handler() {
@@ -225,6 +226,14 @@ public class ContactsOperationView extends FrameLayout implements
 		if(null!=contacts){
 			mOnContactsOperationView.onContactsSms(contacts);
 		}
+	}
+
+	@Override
+	public void onContactsCopy(Contacts contacts) {
+		if(null!=contacts){
+			mOnContactsOperationView.onContactsCopy(contacts);
+		}
+		
 	}
 
 	@Override

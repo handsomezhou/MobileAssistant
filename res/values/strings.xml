@@ -9,6 +9,7 @@
     <string name="contacts">联系人</string>
     <string name="sms">短信</string>
     <string name="more">更多</string>
+    <string name="delete">删除</string>
     <!-- Start: More tag -->
     <string name="phone_info">手机信息</string>
     <string name="app_search">应用搜索</string>

@@ -34,6 +34,7 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 		void onRemoveContactsSelected(Contacts contacts);
 		void onContactsCall(Contacts contacts);
 		void onContactsSms(Contacts contacts);
+		void onContactsCopy(Contacts contacts);
 		void onContactsRefreshView();
 	}
 	
@@ -93,6 +94,7 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			viewHolder.mOperationViewLayout=(View) view.findViewById(R.id.operation_view_layout);
 			viewHolder.mCallIv=(ImageView) view.findViewById(R.id.call_image_view);
 			viewHolder.mSmsIv=(ImageView) view.findViewById(R.id.sms_image_view);
+			viewHolder.mCopyIv=(ImageView) view.findViewById(R.id.copy_image_view);
 			view.setTag(viewHolder);
 		}else{
 			view=convertView;
@@ -211,6 +213,21 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 				}
 			}
 		});
+		
+		viewHolder.mCopyIv.setTag(position);
+		viewHolder.mCopyIv.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int position = (Integer) v.getTag();
+				Contacts contacts = getItem(position);
+				if(null!=mOnContactsAdapter){
+					mOnContactsAdapter.onContactsCopy(contacts);
+				}
+				
+			}
+		});
+		
 		return view;
 	}
 	
@@ -258,6 +275,7 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 		View mOperationViewLayout;
 		ImageView mCallIv;
 		ImageView mSmsIv;
+		ImageView mCopyIv;
 	}
 	
 	private void showAlphabetIndex(TextView textView, int position, final Contacts contacts){

@@ -119,7 +119,17 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	@Override
 	public void onContactsSms(Contacts contacts) {
 		//Toast.makeText(mContext, "onContactsSms"+contacts.getPhoneNumber(), Toast.LENGTH_SHORT).show();
-		ShareUtil.shareTextBySms(getContext(), contacts.getPhoneNumber(), null);
+		if(null!=contacts){
+			ShareUtil.shareTextBySms(getContext(), contacts.getPhoneNumber(), null);
+		}
+	}
+	
+	@Override
+	public void onContactsCopy(Contacts contacts) {
+		if(null!=contacts){
+			Toast.makeText(getContext(), contacts.getName(), Toast.LENGTH_SHORT).show();
+		}
+		
 	}
 	/*end:OnContactsOperationView*/
 	
@@ -142,4 +152,5 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
         }
         mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter));
 	}
+
 }
