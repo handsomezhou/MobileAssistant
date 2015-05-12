@@ -5,6 +5,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="tab_index_icon_height">32dp</dimen>
     <dimen name="tab_index_icon_width">32dp</dimen>
+    <dimen name="tab_index_height">54dp</dimen>
+    <dimen name="tab_index_width">54dp</dimen>
     <dimen name="tab_index_text_size">12sp</dimen>
     <dimen name="dialpad_row_height">54dp</dimen>
     <dimen name="dialpad_icon_height">32dp</dimen>
