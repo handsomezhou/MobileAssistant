@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange.TAB_CHANGE_STATE;
-import com.handsomezhou.mobileassistant.adapter.TelephoneFragmentPagerAdapter;
+import com.handsomezhou.mobileassistant.adapter.FragmentCustomPagerAdapter;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
 import com.handsomezhou.mobileassistant.view.CustomViewPager;
 import com.handsomezhou.mobileassistant.view.T9TelephoneDialpadView;
@@ -28,7 +28,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	
 	private List<Fragment> mFragments;
 	private CustomViewPager mCustomViewPager;
-	private TelephoneFragmentPagerAdapter mTelephoneFragmentPagerAdapter;
+	private FragmentCustomPagerAdapter mFragmentCustomPagerAdapter;
 	
 	private T9TelephoneDialpadView mT9TelephoneDialpadView;
 	private OnTelephoneDialChange mOnTelephoneDialChange;
@@ -77,8 +77,8 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	protected void initListener() {
 		//FragmentManager fm=getActivity().getSupportFragmentManager();
 		FragmentManager fm=getChildFragmentManager();
-		mTelephoneFragmentPagerAdapter=new TelephoneFragmentPagerAdapter(fm, mFragments);
-		mCustomViewPager.setAdapter(mTelephoneFragmentPagerAdapter);
+		mFragmentCustomPagerAdapter=new FragmentCustomPagerAdapter(fm, mFragments);
+		mCustomViewPager.setAdapter(mFragmentCustomPagerAdapter);
 		
 		mCustomViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			
