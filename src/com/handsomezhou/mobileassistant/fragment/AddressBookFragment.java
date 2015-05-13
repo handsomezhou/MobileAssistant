@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.Interface.OnTabChange;
@@ -27,13 +28,16 @@ import com.handsomezhou.mobileassistant.model.IconButtonData;
 import com.handsomezhou.mobileassistant.model.IconButtonValue;
 import com.handsomezhou.mobileassistant.service.MobileAssistantService;
 import com.handsomezhou.mobileassistant.util.ViewUtil;
+import com.handsomezhou.mobileassistant.view.BottomTabCallView;
+import com.handsomezhou.mobileassistant.view.BottomTabCallView.OnBottomTabCallView;
 import com.handsomezhou.mobileassistant.view.BottomTabView;
 import com.handsomezhou.mobileassistant.view.CustomViewPager;
 
-public class AddressBookFragment extends BaseFragment implements OnTabChange,OnCallLogLoad,OnContactsLoad,OnTelephoneDialChange{
+public class AddressBookFragment extends BaseFragment implements OnTabChange,OnCallLogLoad,OnContactsLoad,OnTelephoneDialChange,OnBottomTabCallView{
 	private static final String TAG="AddressBookFragment";
 	private List<AddressBookView> mAddressBookViews;
 	private BottomTabView mBottomTabView;//without call
+	private BottomTabCallView mBottomTabCallView;//with call
 	private CustomViewPager mCustomViewPager;
 	private AddressBookFragmentPagerAdapter mAddressBookFragmentPagerAdapter;
 	   
@@ -121,7 +125,10 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
         mBottomTabView.setOnTabChange(this);
         /*End : BOTTOM_TAB_TAG*/
         
-
+        mBottomTabCallView=(BottomTabCallView) view.findViewById(R.id.bottom_tab_call_view);
+        mBottomTabCallView.setOnBottomTabCallView(this);
+        
+        hideCallView();
 		return view;
 	}
 
@@ -186,6 +193,11 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 			case CALL:
 				if(fragment instanceof TelephoneFragment){
 					((TelephoneFragment) fragment).updateView(tabChangeState);
+					if(TextUtils.isEmpty(((TelephoneFragment) fragment).getT9TelephoneDialpadView().getT9Input())){
+						hideCallView();
+					}else{
+						showCallView();
+					}
 				}
 				break;
 	
@@ -252,16 +264,57 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	@Override
 	public void onPhoneNumberChange(String phoneNumber) {
 		if(TextUtils.isEmpty(phoneNumber)){
-			//ViewUtil.hideView(mBottomTabCallView);
-			ViewUtil.showView(mBottomTabView);
-			
+			hideCallView();
 		}else{
-			ViewUtil.hideView(mBottomTabView);
-			//ViewUtil.showView(mBottomTabCallView);
+			
+			showCallView();
 		}
 	}
 	
+	@Override
+	public void onHideT9TelephoneDialpadView() {
+		mBottomTabView.setCurrentTabItemUnfocused(BOTTOM_TAB_TAG.CALL);
+		hideCallView();
+	}
+	
 	/*End : OnTelephoneDialChange*/
+	
+	/*Start: OnBottomTabCallView*/
+	@Override
+	public void onCallClick() {
+		//Toast.makeText(getContext(), "onCall", Toast.LENGTH_SHORT).show();
+		mBottomTabView.setCurrentTabItemUnfocused(BOTTOM_TAB_TAG.CALL);
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).getT9TelephoneDialpadView().hide();
+		}
+		hideCallView();
+	}
+
+	@Override
+	public void onDialClick() {
+		Toast.makeText(getContext(), "onDial", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onDeleteClick() {
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).getT9TelephoneDialpadView().deleteSingleDialCharacter();
+		}
+		//Toast.makeText(getContext(), "onDelete", Toast.LENGTH_SHORT).show();
+		
+	}
+	
+	@Override
+	public void onDeleteLongClick() {
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			((TelephoneFragment) telephoneFragment).getT9TelephoneDialpadView().deleteAllDialCharacter();
+		}
+	}
+
+	/*End: OnBottomTabCallView*/
 	
 	private void changeToTab(Object fromTab, Object toTab,TAB_CHANGE_STATE tabChangeState){
 	    if(null==toTab){
@@ -304,5 +357,23 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	
 		return item;
 	}
+	
+	private void showCallView(){
+		ViewUtil.hideView(mBottomTabView);
+		ViewUtil.showView(mBottomTabCallView);
+		return;
+	}
+	
+	private void hideCallView(){
+		ViewUtil.hideView(mBottomTabCallView);
+		ViewUtil.showView(mBottomTabView);
+		return;
+	}
+
+	
+	
+	
+
+	
 
 }

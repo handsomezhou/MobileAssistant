@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.handsomezhou.mobileassistant.R;
+import com.handsomezhou.mobileassistant.util.ViewUtil;
 /**
  * @description Custom T9 phone dialpad View
  * @author handsomezhou
@@ -61,6 +62,14 @@ public class T9TelephoneDialpadView extends LinearLayout implements
 
 	}
 
+	public void show(){
+		ViewUtil.showView(this);
+	}
+	
+	public void hide(){
+		ViewUtil.hideView(this);
+	}
+	
 	private void initData() {
 
 	}
@@ -216,7 +225,7 @@ public class T9TelephoneDialpadView extends LinearLayout implements
 		mOnT9TelephoneDialpadView = onT9TelephoneDialpadView;
 	}
 
-	private void deleteSingleDialCharacter() {
+	public void deleteSingleDialCharacter() {
 		String curInputStr = mT9InputEt.getText().toString();
 		if (curInputStr.length() > 0) {
 			String deleteCharacter = curInputStr.substring(
@@ -232,7 +241,7 @@ public class T9TelephoneDialpadView extends LinearLayout implements
 		}
 	}
 
-	private void deleteAllDialCharacter() {
+	public void deleteAllDialCharacter() {
 		String curInputStr = mT9InputEt.getText().toString();
 		if (curInputStr.length() > 0) {
 			String deleteCharacter = curInputStr.substring(0,

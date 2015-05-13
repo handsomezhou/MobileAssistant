@@ -5,15 +5,17 @@
     android:orientation="horizontal" >
 
     <LinearLayout
+        android:id="@+id/call_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_weight="1"
-        android:gravity="center"
+        android:gravity="bottom|center_horizontal"
         android:orientation="vertical" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/tab_index_icon_width"
+            android:layout_height="@dimen/tab_index_icon_height"
             android:background="@drawable/call_icon_selected_focused"
             android:contentDescription="@string/app_name" />
 
@@ -24,6 +26,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/dial_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -31,22 +34,26 @@
         android:orientation="vertical" >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="@string/call" />
+            android:background="@color/deep_sky_blue"
+            android:gravity="center"
+            android:text="呼叫" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/delete_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/tab_index_icon_width"
+            android:layout_height="@dimen/tab_index_icon_height"
             android:background="@drawable/delete_icon"
             android:contentDescription="@string/app_name" />
 

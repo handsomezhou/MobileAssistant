@@ -92,6 +92,22 @@ public class BottomTabView extends LinearLayout implements OnClickListener{
 		}
 	}
 	
+	public void setCurrentTabItemUnfocused(Object tag){
+		if(null==tag){
+			return;
+		}
+		
+		setCurrentTab(tag);
+		for(IconButtonData ibd:mIconButtonData){
+			if(ibd.getIconButtonValue().getTag().equals(tag)){
+				ibd.getIconButtonView().getIconIv().setBackgroundResource(ibd.getIconButtonValue().getIconSelectedUnfocused());
+				setLastIconResId(ibd.getIconButtonValue().getIconSelectedUnfocused());
+			}else{
+				ibd.getIconButtonView().getIconIv().setBackgroundResource(ibd.getIconButtonValue().getIconUnselected());
+			}
+		}
+	}
+	
 	public void removeIconButtonData(IconButtonData iconButtonData){
 	    
 	}

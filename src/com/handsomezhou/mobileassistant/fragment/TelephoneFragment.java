@@ -35,6 +35,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	
 	public interface OnTelephoneDialChange{
 		void onPhoneNumberChange(String phoneNumber);
+		void onHideT9TelephoneDialpadView();
 	}
 	/*private CallLogFragment mCallLogFragment;
 	private ContactsT9Fragment mContactsT9Fragment;*/
@@ -125,11 +126,22 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 
     @Override
     public void onHideT9TelephoneDialpadView() {
-        // TODO Auto-generated method stub
+        if(null!=mOnTelephoneDialChange){
+        	mOnTelephoneDialChange.onHideT9TelephoneDialpadView();
+        }
         
     }
     /*End: OnT9TelephoneDialpadView*/
 
+    public T9TelephoneDialpadView getT9TelephoneDialpadView() {
+		return mT9TelephoneDialpadView;
+	}
+
+	public void setT9TelephoneDialpadView(T9TelephoneDialpadView t9TelephoneDialpadView) {
+		mT9TelephoneDialpadView = t9TelephoneDialpadView;
+	}
+
+	
     public OnTelephoneDialChange getOnTelephoneDialChange() {
 		return mOnTelephoneDialChange;
 	}

@@ -16,13 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="54dp" />
 
-        <com.handsomezhou.mobileassistant.view.BottomTabView
+        <com.handsomezhou.mobileassistant.view.BottomTabCallView
             android:id="@+id/bottom_tab_call_view"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:background="@color/white"
             android:clickable="true"
-            android:visibility="gone" />
+            android:visibility="visible" />
     </FrameLayout>
 
     <com.handsomezhou.mobileassistant.view.CustomViewPager
