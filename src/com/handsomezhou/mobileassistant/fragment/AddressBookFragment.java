@@ -177,6 +177,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	public void onChangeToTab(Object fromTab, Object toTab,
 			TAB_CHANGE_STATE tabChangeState) {
 		//Toast.makeText(getContext(), "onChangeToTab"+"["+fromTab.toString()+"]["+toTab.toString()+"]tabChangeState["+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
+		
+		Log.i(TAG, "onChangeToTab"+"["+fromTab.toString()+"]["+toTab.toString()+"]tabChangeState["+tabChangeState.toString()+"]");
 		if(toTab instanceof BOTTOM_TAB_TAG){
 			int item=getAddressBookViewItem(toTab);
 			mCustomViewPager.setCurrentItem(item);
@@ -187,6 +189,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	@Override
 	public void onClickTab(Object currentTab, TAB_CHANGE_STATE tabChangeState) {
 		//Toast.makeText(getContext(), "onClickTab"+"["+currentTab.toString()+"]tabChangeState¡¾"+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(getContext(), "onClickTab"+"["+currentTab.toString()+"]tabChangeState¡¾"+tabChangeState.toString()+"]", Toast.LENGTH_SHORT).show();
+		Log.i(TAG, "onClickTab"+"["+currentTab.toString()+"]tabChangeState¡¾"+tabChangeState.toString()+"]");
 		if(currentTab instanceof BOTTOM_TAB_TAG){
 			Fragment fragment=mAddressBookViews.get(getAddressBookViewItem(currentTab)).getFragment();
 			switch ((BOTTOM_TAB_TAG)currentTab) {
@@ -263,12 +267,20 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 	/*Start : OnTelephoneDialChange*/
 	@Override
 	public void onPhoneNumberChange(String phoneNumber) {
-		if(TextUtils.isEmpty(phoneNumber)){
-			hideCallView();
-		}else{
-			
-			showCallView();
+		Log.i(TAG, "phoneNumber");
+		switch ((BOTTOM_TAB_TAG)mBottomTabView.getCurrentTab()) {
+		case CALL:
+			if(TextUtils.isEmpty(phoneNumber)){
+				hideCallView();
+			}else{
+				showCallView();
+			}
+			break;
+
+		default:
+			break;
 		}
+		
 	}
 	
 	@Override
