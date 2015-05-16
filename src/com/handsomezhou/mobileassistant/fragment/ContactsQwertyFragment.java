@@ -71,7 +71,7 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	}
 	
 	public void contactsLoadSuccess(){
-		ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
+		ContactsHelper.getInstance().getQwertySearchContacts(null);
 		mContactsOperationView.contactsLoadSuccess();
 		ContactsIndexHelper.getInstance().praseContacts(ContactsHelper.getInstance().getBaseContacts());
 	}
@@ -83,7 +83,7 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	/*start:OnContactsOperationView*/
 	@Override
 	public void onListItemClick(Contacts contacts,int position){
-		ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
+		ContactsHelper.getInstance().getQwertySearchContacts(null);
 		mContactsOperationView.updateContactsList(true);
 	}
 
@@ -146,9 +146,9 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	    }
 	   
         if(TextUtils.isEmpty(curCharacter)){
-            ContactsHelper.getInstance().parseQwertyInputSearchContacts(null);
+            ContactsHelper.getInstance().getQwertySearchContacts(null);
         }else{
-            ContactsHelper.getInstance().parseQwertyInputSearchContacts(curCharacter);
+            ContactsHelper.getInstance().getQwertySearchContacts(curCharacter);
         }
         mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter));
 	}

@@ -127,10 +127,10 @@ public class ContactsOperationView extends FrameLayout implements
 	}
 	
 	public static Contacts getContacts(int position){
-		if((position<0)||(position>=ContactsHelper.getInstance().getSearchContacts().size())){
+		if((position<0)||(position>=ContactsHelper.getInstance().getQwertySearchContacts().size())){
 			return null;
 		}
-		return ContactsHelper.getInstance().getSearchContacts().get(position);
+		return ContactsHelper.getInstance().getQwertySearchContacts().get(position);
 	}
 	
 	public void updateContactsList(boolean searchEmpty) {
@@ -173,7 +173,7 @@ public class ContactsOperationView extends FrameLayout implements
 	@Override
 	public void onContactsSelected(Contacts contacts) {
 		int contactsIndex = ContactsHelper.getInstance()
-				.getSearchContactsIndex(contacts);
+				.getQwertySearchContactsIndex(contacts);
 		if (contactsIndex < 0) {
 			return;
 		}
@@ -275,7 +275,7 @@ public class ContactsOperationView extends FrameLayout implements
 	private void initData() {
 		mContactsAdapter = new ContactsQwertyAdapter(mContext,
 				R.layout.contacts_qwerty_list_item, ContactsHelper.getInstance()
-						.getSearchContacts());
+						.getQwertySearchContacts());
 		mContactsAdapter.setOnContactsAdapter(this);
 		mContactsLv.setAdapter(mContactsAdapter);
 	}
@@ -287,7 +287,7 @@ public class ContactsOperationView extends FrameLayout implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Contacts contacts = ContactsHelper.getInstance()
-						.getSearchContacts().get(position);
+						.getQwertySearchContacts().get(position);
 				if(false==contacts.isFirstMultipleContacts()){
 					return;
 				}

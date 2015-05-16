@@ -18,9 +18,9 @@ public class ContactsT9Fragment extends BaseFragment {
 	@Override
 	protected void initData() {
 		setContext(getActivity());
-		Log.i(TAG, "ContactsHelper.getInstance().getBaseContacts().size()="+ContactsHelper.getInstance().getBaseContacts().size());
+		Log.i(TAG, "ContactsHelper.getInstance().getBaseContacts().size()="+ContactsHelper.getInstance().getT9SearchContacts().size());
 //		ContactsHelper.getInstance().parseT9InputSearchContacts(null);
-		mContactsT9Adapter=new ContactsT9Adapter(getContext(), R.layout.contacts_t9_list_item,ContactsHelper.getInstance().getBaseContacts());
+		mContactsT9Adapter=new ContactsT9Adapter(getContext(), R.layout.contacts_t9_list_item,ContactsHelper.getInstance().getT9SearchContacts());
 	}
 
 	@Override

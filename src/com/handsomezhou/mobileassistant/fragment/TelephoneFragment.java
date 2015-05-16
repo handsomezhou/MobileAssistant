@@ -164,10 +164,10 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
         }
         
         if(TextUtils.isEmpty(curCharacter)){
-            ContactsHelper.getInstance().parseT9InputSearchContacts(null);
+            ContactsHelper.getInstance().getT9SearchContacts(null);
             mCustomViewPager.setCurrentItem(FRAGMENT_INDEX_CALL_LOG);
         }else{
-            ContactsHelper.getInstance().parseT9InputSearchContacts(curCharacter);
+            ContactsHelper.getInstance().getT9SearchContacts(curCharacter);
             mCustomViewPager.setCurrentItem(FRAGMENT_INDEX_CONTACTS_T9);
         }
         
@@ -215,6 +215,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	public void contactsLoadSuccess(){
 		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
 		if(contactsT9Fragment instanceof ContactsT9Fragment){
+			updateSearch(null);
 			((ContactsT9Fragment) contactsT9Fragment).updateView();
 		}
 		return;

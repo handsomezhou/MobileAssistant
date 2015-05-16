@@ -30,26 +30,25 @@ public class ContactsHelper {
 	private Context mContext;
 	private static ContactsHelper mInstance = null;
 	private List<Contacts> mBaseContacts = null; // The basic data used for the search
-	private List<Contacts> mSearchContacts = null; // The search results from the basic data
 	/*
 	 * save the first input string which search no result.
-	 * mFirstNoSearchResultInput.size<=0, means that the first input string
-	 * which search no result not appear. mFirstNoSearchResultInput.size>0,
+	 * mXXXFirstNoSearchResultInput.size<=0, means that the first input string
+	 * which search no result not appear. mXXXFirstNoSearchResultInput.size>0,
 	 * means that the first input string which search no result has appeared,
-	 * it's mFirstNoSearchResultInput.toString(). We can reduce the number of
+	 * it's mXXXFirstNoSearchResultInput.toString(). We can reduce the number of
 	 * search basic data by the first input string which search no result.
-	 */
-	private StringBuffer mFirstNoSearchResultInput = null;
+	 */	
+	private List<Contacts> mT9SearchContacts=null;	
+	private static StringBuffer  mT9FirstNoSearchResultInput=null;
+	
+	private List<Contacts> mQwertySearchContacts=null;
+	private static StringBuffer  mQwertyFirstNoSearchResultInput=null;
+	
 	private AsyncTask<Object, Object, List<Contacts>> mLoadTask = null;
 	private OnContactsLoad mOnContactsLoad = null;
-	/*
-	 * private OnContactsChanged mOnContactsChanged=null; private
-	 * ContentObserver mContentObserver;
-	 */
+
 	private static boolean mContactsChanged = true;
 	private HashMap<String, Contacts> mSelectedContactsHashMap=null; //(id+phoneNumber)as key
-	
-	/* private Handler mContactsHandler=new Handler(); */
 
 	public interface OnContactsLoad {
 		void onContactsLoadSuccess();
@@ -83,22 +82,22 @@ public class ContactsHelper {
 		return mBaseContacts;
 	}
 
-	// public void setBaseContacts(List<Contacts> baseContacts) {
-	// mBaseContacts = baseContacts;
-	// }
-
-	public List<Contacts> getSearchContacts() {
-		return mSearchContacts;
+	public List<Contacts> getT9SearchContacts(){
+		return mT9SearchContacts;
 	}
-
-	public int getSearchContactsIndex(Contacts contacts) {
+	
+	public List<Contacts> getQwertySearchContacts(){
+		return mQwertySearchContacts;
+	}
+	
+	public int getQwertySearchContactsIndex(Contacts contacts) {
 		int index = -1;
 		if (null == contacts) {
 			return -1;
 		}
-		int searchContactsCount = mSearchContacts.size();
+		int searchContactsCount = mQwertySearchContacts.size();
 		for (int i = 0; i < searchContactsCount; i++) {
-			if (contacts.getName().charAt(0) == mSearchContacts.get(i)
+			if (contacts.getName().charAt(0) == mQwertySearchContacts.get(i)
 					.getName().charAt(0)) {
 				index = i;
 				break;
@@ -174,22 +173,22 @@ public class ContactsHelper {
 	}
 
 	/**
-	 * @description search base data according to string parameter
+	 * @description T9 search base data according to string parameter
 	 * @param search
 	 *            (valid characters include:'0'~'9','*','#')
 	 * @return void
 	 *
 	 * 
 	 */
-	public void parseT9InputSearchContacts(String search) {
+	public void getT9SearchContacts(String search) {
 		List<Contacts> mSearchByNameContacts=new ArrayList<Contacts>();
 		List<Contacts> mSearchByPhoneNumberContacts=new ArrayList<Contacts>();
 
 		if (null == search) {// add all base data to search
-			if (null != mSearchContacts) {
-				mSearchContacts.clear();
+			if (null != mT9SearchContacts) {
+				mT9SearchContacts.clear();
 			} else {
-				mSearchContacts = new ArrayList<Contacts>();
+				mT9SearchContacts = new ArrayList<Contacts>();
 			}
 
 			for (int i=0; i<mBaseContacts.size(); i++) {
@@ -200,50 +199,50 @@ public class ContactsHelper {
 					currentContacts.setMatchStartIndex(-1);
 					currentContacts.setMatchLength(0);
 					if(true==currentContacts.isFirstMultipleContacts()){
-						mSearchContacts.add(currentContacts);
+						mT9SearchContacts.add(currentContacts);
 					}else{
 						if(false==currentContacts.isHideMultipleContacts()){
-							mSearchContacts.add(currentContacts);
+							mT9SearchContacts.add(currentContacts);
 						}
 					}
 				}
 			}
 			
-			//mSearchContacts.addAll(mBaseContacts);
-			mFirstNoSearchResultInput.delete(0,mFirstNoSearchResultInput.length());
-			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="+ mFirstNoSearchResultInput.length());
+			//mT9SearchContacts.addAll(mBaseContacts);
+			mT9FirstNoSearchResultInput.delete(0,mT9FirstNoSearchResultInput.length());
+			Log.i(TAG, "null==search,mT9FirstNoSearchResultInput.length()="+ mT9FirstNoSearchResultInput.length());
 			return;
 		}
 
-		if (mFirstNoSearchResultInput.length() > 0) {
-			if (search.contains(mFirstNoSearchResultInput.toString())) {
+		if (mT9FirstNoSearchResultInput.length() > 0) {
+			if (search.contains(mT9FirstNoSearchResultInput.toString())) {
 				Log.i(TAG,
-						"no need  to search,null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length() + "["
-								+ mFirstNoSearchResultInput.toString() + "]"
+						"no need  to search,null!=search,mT9FirstNoSearchResultInput.length()="
+								+ mT9FirstNoSearchResultInput.length() + "["
+								+ mT9FirstNoSearchResultInput.toString() + "]"
 								+ ";searchlen=" + search.length() + "["
 								+ search + "]");
 				return;
 			} else {
 				Log.i(TAG,
-						"delete  mFirstNoSearchResultInput, null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length()
+						"delete  mT9FirstNoSearchResultInput, null!=search,mT9FirstNoSearchResultInput.length()="
+								+ mT9FirstNoSearchResultInput.length()
 								+ "["
-								+ mFirstNoSearchResultInput.toString()
+								+ mT9FirstNoSearchResultInput.toString()
 								+ "]"
 								+ ";searchlen="
 								+ search.length()
 								+ "["
 								+ search + "]");
-				mFirstNoSearchResultInput.delete(0,
-						mFirstNoSearchResultInput.length());
+				mT9FirstNoSearchResultInput.delete(0,
+						mT9FirstNoSearchResultInput.length());
 			}
 		}
 
-		if (null != mSearchContacts) {
-			mSearchContacts.clear();
+		if (null != mT9SearchContacts) {
+			mT9SearchContacts.clear();
 		} else {
-			mSearchContacts = new ArrayList<Contacts>();
+			mT9SearchContacts = new ArrayList<Contacts>();
 		}
 
 		int contactsCount = mBaseContacts.size();
@@ -296,17 +295,17 @@ public class ContactsHelper {
 			Collections.sort(mSearchByPhoneNumberContacts, Contacts.mSearchComparator);
 		}
 		
-		mSearchContacts.clear();
-		mSearchContacts.addAll(mSearchByNameContacts);
-		mSearchContacts.addAll(mSearchByPhoneNumberContacts);
+		mT9SearchContacts.clear();
+		mT9SearchContacts.addAll(mSearchByNameContacts);
+		mT9SearchContacts.addAll(mSearchByPhoneNumberContacts);
 		
-		if (mSearchContacts.size() <= 0) {
-			if (mFirstNoSearchResultInput.length() <= 0) {
-				mFirstNoSearchResultInput.append(search);
+		if (mT9SearchContacts.size() <= 0) {
+			if (mT9FirstNoSearchResultInput.length() <= 0) {
+				mT9FirstNoSearchResultInput.append(search);
 				Log.i(TAG,
 						"no search result,null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length() + "["
-								+ mFirstNoSearchResultInput.toString() + "]"
+								+ mT9FirstNoSearchResultInput.length() + "["
+								+ mT9FirstNoSearchResultInput.toString() + "]"
 								+ ";searchlen=" + search.length() + "["
 								+ search + "]");
 			} else {
@@ -317,16 +316,16 @@ public class ContactsHelper {
 	}
 
 	/**
-	 * @description search base data according to string parameter
+	 * @description Qwerty search base data according to string parameter
 	 * @param search
 	 * @return void
 	 */
-	public void parseQwertyInputSearchContacts(String search) {
+	public void getQwertySearchContacts(String search) {
 		if (null == search) {// add all base data to search
-			if (null != mSearchContacts) {
-				mSearchContacts.clear();
+			if (null != mQwertySearchContacts) {
+				mQwertySearchContacts.clear();
 			} else {
-				mSearchContacts = new ArrayList<Contacts>();
+				mQwertySearchContacts = new ArrayList<Contacts>();
 			}
 
 			for(int i=0; i<mBaseContacts.size(); i++){
@@ -337,50 +336,50 @@ public class ContactsHelper {
 					currentContacts.setMatchStartIndex(-1);
 					currentContacts.setMatchLength(0);
 					if(true==currentContacts.isFirstMultipleContacts()){
-						mSearchContacts.add(currentContacts);
+						mQwertySearchContacts.add(currentContacts);
 					}else{
 						if(false==currentContacts.isHideMultipleContacts()){
-							mSearchContacts.add(currentContacts);
+							mQwertySearchContacts.add(currentContacts);
 						}
 					}
 				}
 			}
 
-			//mSearchContacts.addAll(mBaseContacts);
-			mFirstNoSearchResultInput.delete(0,mFirstNoSearchResultInput.length());
-			Log.i(TAG, "null==search,mFirstNoSearchResultInput.length()="+ mFirstNoSearchResultInput.length());
+			//mQwertySearchContacts.addAll(mBaseContacts);
+			mQwertyFirstNoSearchResultInput.delete(0,mQwertyFirstNoSearchResultInput.length());
+			Log.i(TAG, "null==search,mQwertyFirstNoSearchResultInput.length()="+ mQwertyFirstNoSearchResultInput.length());
 			return;
 		}
 
-		if (mFirstNoSearchResultInput.length() > 0) {
-			if (search.contains(mFirstNoSearchResultInput.toString())) {
+		if (mQwertyFirstNoSearchResultInput.length() > 0) {
+			if (search.contains(mQwertyFirstNoSearchResultInput.toString())) {
 				Log.i(TAG,
-						"no need  to search,null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length() + "["
-								+ mFirstNoSearchResultInput.toString() + "]"
+						"no need  to search,null!=search,mQwertyFirstNoSearchResultInput.length()="
+								+ mQwertyFirstNoSearchResultInput.length() + "["
+								+ mQwertyFirstNoSearchResultInput.toString() + "]"
 								+ ";searchlen=" + search.length() + "["
 								+ search + "]");
 				return;
 			} else {
 				Log.i(TAG,
-						"delete  mFirstNoSearchResultInput, null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length()
+						"delete  mQwertyFirstNoSearchResultInput, null!=search,mQwertyFirstNoSearchResultInput.length()="
+								+ mQwertyFirstNoSearchResultInput.length()
 								+ "["
-								+ mFirstNoSearchResultInput.toString()
+								+ mQwertyFirstNoSearchResultInput.toString()
 								+ "]"
 								+ ";searchlen="
 								+ search.length()
 								+ "["
 								+ search + "]");
-				mFirstNoSearchResultInput.delete(0,
-						mFirstNoSearchResultInput.length());
+				mQwertyFirstNoSearchResultInput.delete(0,
+						mQwertyFirstNoSearchResultInput.length());
 			}
 		}
 
-		if (null != mSearchContacts) {
-			mSearchContacts.clear();
+		if (null != mQwertySearchContacts) {
+			mQwertySearchContacts.clear();
 		} else {
-			mSearchContacts = new ArrayList<Contacts>();
+			mQwertySearchContacts = new ArrayList<Contacts>();
 		}
 
 		int contactsCount = mBaseContacts.size();
@@ -404,7 +403,7 @@ public class ContactsHelper {
 					currentContacts.setMatchKeywords(chineseKeyWord.toString());
 					currentContacts.setMatchStartIndex(firstContacts.getName().indexOf(firstContacts.getMatchKeywords().toString()));
 					currentContacts.setMatchLength(firstContacts.getMatchKeywords().length());
-					mSearchContacts.add(currentContacts);
+					mQwertySearchContacts.add(currentContacts);
 				}
 				chineseKeyWord.delete(0, chineseKeyWord.length());
 				
@@ -417,27 +416,27 @@ public class ContactsHelper {
 						currentContacts.setMatchKeywords(search);
 						currentContacts.setMatchStartIndex(currentContacts.getPhoneNumber().indexOf(search));
 						currentContacts.setMatchLength(search.length());
-						mSearchContacts.add(currentContacts);
+						mQwertySearchContacts.add(currentContacts);
 					}
 				}
 				continue;
 			}
 		}
 
-		if (mSearchContacts.size() <= 0) {
-			if (mFirstNoSearchResultInput.length() <= 0) {
-				mFirstNoSearchResultInput.append(search);
+		if (mQwertySearchContacts.size() <= 0) {
+			if (mQwertyFirstNoSearchResultInput.length() <= 0) {
+				mQwertyFirstNoSearchResultInput.append(search);
 				Log.i(TAG,
-						"no search result,null!=search,mFirstNoSearchResultInput.length()="
-								+ mFirstNoSearchResultInput.length() + "["
-								+ mFirstNoSearchResultInput.toString() + "]"
+						"no search result,null!=search,mQwertyFirstNoSearchResultInput.length()="
+								+ mQwertyFirstNoSearchResultInput.length() + "["
+								+ mQwertyFirstNoSearchResultInput.toString() + "]"
 								+ ";searchlen=" + search.length() + "["
 								+ search + "]");
 			} else {
 
 			}
 		}else{
-			Collections.sort(mSearchContacts, Contacts.mSearchComparator);
+			Collections.sort(mQwertySearchContacts, Contacts.mSearchComparator);
 		}
 
 	}
@@ -528,17 +527,30 @@ public class ContactsHelper {
 			mBaseContacts.clear();
 		}
 
-		if (null == mSearchContacts) {
-			mSearchContacts = new ArrayList<Contacts>();
+		if(null==mT9SearchContacts){
+			mT9SearchContacts=new ArrayList<Contacts>();
+		}else{
+			mT9SearchContacts.clear();
+		}
+		
+		if(null==mT9FirstNoSearchResultInput){
+			mT9FirstNoSearchResultInput=new StringBuffer();
+		}else{
+			mT9FirstNoSearchResultInput.delete(0,
+					mT9FirstNoSearchResultInput.length());
+		}
+		
+		if (null == mQwertySearchContacts) {
+			mQwertySearchContacts = new ArrayList<Contacts>();
 		} else {
-			mSearchContacts.clear();
+			mQwertySearchContacts.clear();
 		}
 
-		if (null == mFirstNoSearchResultInput) {
-			mFirstNoSearchResultInput = new StringBuffer();
+		if (null == mQwertyFirstNoSearchResultInput) {
+			mQwertyFirstNoSearchResultInput = new StringBuffer();
 		} else {
-			mFirstNoSearchResultInput.delete(0,
-					mFirstNoSearchResultInput.length());
+			mQwertyFirstNoSearchResultInput.delete(0,
+					mQwertyFirstNoSearchResultInput.length());
 		}
 		
 		if(null==mSelectedContactsHashMap){
