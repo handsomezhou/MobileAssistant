@@ -16,5 +16,10 @@ public class MainActivity extends BaseSingleFragmentActivity {
 	protected boolean isRealTimeLoadFragment() {
 		return false;
 	}
-	
+
+	@Override
+	public void onBackPressed() {
+		moveTaskToBack(true);
+	}
+
 }

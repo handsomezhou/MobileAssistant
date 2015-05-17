@@ -284,13 +284,6 @@ public class T9TelephoneDialpadView extends LinearLayout implements
 	public int getT9TelephoneDialpadViewVisibility() {
 		return this.getVisibility();
 	}
-	/*
-	 * public void switchT9TelephoneDialpadViewVisibility(){ switch
-	 * (this.getVisibility()) { case View.VISIBLE:
-	 * this.setVisibility(View.GONE); break; case View.GONE:
-	 * this.setVisibility(View.VISIBLE); break; default:
-	 * this.setVisibility(View.VISIBLE); break; } }
-	 */
 	
 	public String getT9Input(){
 		return mT9InputEt.getText().toString();

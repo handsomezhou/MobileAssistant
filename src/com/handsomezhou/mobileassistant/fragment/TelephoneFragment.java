@@ -26,7 +26,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	private static final int FRAGMENT_INDEX_CALL_LOG=0;
 	private static final int FRAGMENT_INDEX_CONTACTS_T9=1;
 	
-	private List<Fragment> mFragments;
+	private List<Fragment> mFragments=null;
 	private CustomViewPager mCustomViewPager;
 	private FragmentCustomPagerAdapter mFragmentCustomPagerAdapter;
 	
@@ -37,8 +37,6 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 		void onPhoneNumberChange(String phoneNumber);
 		void onHideT9TelephoneDialpadView();
 	}
-	/*private CallLogFragment mCallLogFragment;
-	private ContactsT9Fragment mContactsT9Fragment;*/
 
 	@Override
 	protected void initData() {
