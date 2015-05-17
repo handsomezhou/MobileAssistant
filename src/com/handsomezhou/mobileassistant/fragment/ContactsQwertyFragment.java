@@ -69,16 +69,6 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 			}
 		});
 	}
-	
-	public void contactsLoadSuccess(){
-		ContactsHelper.getInstance().getQwertySearchContacts(null);
-		mContactsOperationView.contactsLoadSuccess();
-		ContactsIndexHelper.getInstance().praseContacts(ContactsHelper.getInstance().getBaseContacts());
-	}
-	
-	public void contactsLoadFailed(){
-		mContactsOperationView.contactsLoadFailed();
-	}
 
 	/*start:OnContactsOperationView*/
 	@Override
@@ -133,6 +123,16 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 		
 	}
 	/*end:OnContactsOperationView*/
+	
+	public void contactsLoadSuccess(){
+		ContactsHelper.getInstance().getQwertySearchContacts(null);
+		mContactsOperationView.contactsLoadSuccess();
+		ContactsIndexHelper.getInstance().praseContacts(ContactsHelper.getInstance().getBaseContacts());
+	}
+	
+	public void contactsLoadFailed(){
+		mContactsOperationView.contactsLoadFailed();
+	}
 	
 	public void updateSearch(){
 	    updateSearch(mSearchEt.getText().toString());

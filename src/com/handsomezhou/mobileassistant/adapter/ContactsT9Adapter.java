@@ -24,7 +24,8 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 	private int mTextViewResourceId;
 	private List<Contacts> mContacts;
 	private OnContactsT9Adapter mOnContactsT9Adapter;
-	
+	private boolean mSelectContactsCbVisible;
+
 	public interface OnContactsT9Adapter{
 		void onAddContactsSelected(Contacts contacts);
 		void onRemoveContactsSelected(Contacts contacts);
@@ -40,17 +41,10 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 		mContext=context;
 		mTextViewResourceId=textViewResourceId;
 		mContacts=contacts;
+		setSelectContactsCbVisible(true);
 	
 	}
 	
-	public OnContactsT9Adapter getOnContactsT9Adapter() {
-		return mOnContactsT9Adapter;
-	}
-
-	public void setOnContactsT9Adapter(OnContactsT9Adapter onContactsT9Adapter) {
-		mOnContactsT9Adapter = onContactsT9Adapter;
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view=null;
@@ -61,7 +55,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 			viewHolder=new ViewHolder();
 			viewHolder.mAlphabetTv=(TextView)view.findViewById(R.id.alphabet_text_view);
 			viewHolder.mContactsMultiplePhoneOperationPromptIv=(ImageView)view.findViewById(R.id.contacts_multiple_phone_operation_prompt_image_view);
-			viewHolder.mSelectContactsCB=(CheckBox) view.findViewById(R.id.select_contacts_check_box);
+			viewHolder.mSelectContactsCb=(CheckBox) view.findViewById(R.id.select_contacts_check_box);
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
 			viewHolder.mPhoneNumber=(TextView) view.findViewById(R.id.phone_number_text_view);
 			viewHolder.mOperationViewIv=(ImageView) view.findViewById(R.id.operation_view_image_view);
@@ -119,9 +113,15 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 		}
 		
 		
-		viewHolder.mSelectContactsCB.setTag(position);
-		viewHolder.mSelectContactsCB.setChecked(contacts.isSelected());
-		viewHolder.mSelectContactsCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		
+		if(isSelectContactsCbVisible()){
+			ViewUtil.showView(viewHolder.mSelectContactsCb);
+		}else{
+			ViewUtil.hideView(viewHolder.mSelectContactsCb);
+		}
+		viewHolder.mSelectContactsCb.setTag(position);
+		viewHolder.mSelectContactsCb.setChecked(contacts.isSelected());
+		viewHolder.mSelectContactsCb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -139,6 +139,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 				}
 			}
 		});
+		
 		
 		viewHolder.mOperationViewIv.setTag(position);
 		int resid=(true==contacts.isHideOperationView())?(R.drawable.arrow_down):(R.drawable.arrow_up);
@@ -205,6 +206,22 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 		return view;
 	}
 	
+	public OnContactsT9Adapter getOnContactsT9Adapter() {
+		return mOnContactsT9Adapter;
+	}
+
+	public void setOnContactsT9Adapter(OnContactsT9Adapter onContactsT9Adapter) {
+		mOnContactsT9Adapter = onContactsT9Adapter;
+	}
+
+	public boolean isSelectContactsCbVisible() {
+		return mSelectContactsCbVisible;
+	}
+
+	public void setSelectContactsCbVisible(boolean selectContactsCbVisible) {
+		mSelectContactsCbVisible = selectContactsCbVisible;
+	}
+	
 	public void clearSelectedContacts(){
 		//clear data
 		for(Contacts contacts:mContacts){
@@ -230,7 +247,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 	private class ViewHolder{
 		TextView mAlphabetTv;
 		ImageView mContactsMultiplePhoneOperationPromptIv;
-		CheckBox mSelectContactsCB;
+		CheckBox mSelectContactsCb;
 		TextView mNameTv;
 		TextView mPhoneNumber;
 		ImageView mOperationViewIv;

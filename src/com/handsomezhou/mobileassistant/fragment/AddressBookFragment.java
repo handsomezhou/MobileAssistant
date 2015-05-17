@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -307,7 +308,18 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 
 	@Override
 	public void onDialClick() {
-		Toast.makeText(getContext(), "onDial", Toast.LENGTH_SHORT).show();
+		Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+		if(telephoneFragment instanceof TelephoneFragment){
+			
+			String phoneNumber=((TelephoneFragment) telephoneFragment).getT9TelephoneDialpadView().getT9Input();
+			if(!TextUtils.isEmpty(phoneNumber)){
+				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNumber));
+				((TelephoneFragment) telephoneFragment).getT9TelephoneDialpadView().deleteAllDialCharacter();
+				getContext().startActivity(intent);
+				
+			}
+		}
+		
 	}
 
 	@Override

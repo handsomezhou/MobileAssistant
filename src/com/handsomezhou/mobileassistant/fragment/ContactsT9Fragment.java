@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
@@ -18,46 +19,28 @@ import com.handsomezhou.mobileassistant.adapter.ContactsT9Adapter.OnContactsT9Ad
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
 import com.handsomezhou.mobileassistant.model.Contacts;
 import com.handsomezhou.mobileassistant.util.ShareUtil;
+import com.handsomezhou.mobileassistant.util.ViewUtil;
 
 public class ContactsT9Fragment extends BaseFragment implements OnContactsT9Adapter{
 	private static final String TAG="ContactsT9Fragment";
 	private ListView mContactsT9Lv;
+	private TextView mSearchResultPromptTv;
 	private ContactsT9Adapter mContactsT9Adapter;
 	@Override
 	protected void initData() {
 		setContext(getActivity());
 		Log.i(TAG, "ContactsHelper.getInstance().getBaseContacts().size()="+ContactsHelper.getInstance().getT9SearchContacts().size());
-//		ContactsHelper.getInstance().parseT9InputSearchContacts(null);
 		mContactsT9Adapter=new ContactsT9Adapter(getContext(), R.layout.contacts_t9_list_item,ContactsHelper.getInstance().getT9SearchContacts());
 		mContactsT9Adapter.setOnContactsT9Adapter(this);
+		mContactsT9Adapter.setSelectContactsCbVisible(false);
 	}
-/**
- * public void updateContactsList() {
-		if (null == mContactsLv) {
-			return;
-		}
-		
-		ViewUtil.hideView(mContactsIndexView);
-		
-		BaseAdapter contactsAdapter = (BaseAdapter) mContactsLv.getAdapter();
-		if (null != contactsAdapter) {
-			contactsAdapter.notifyDataSetChanged();
-			if (contactsAdapter.getCount() > 0) {
-				ViewUtil.showView(mContactsLv);
-				ViewUtil.hideView(mSearchResultPromptTv);
 
-			} else {
-				ViewUtil.hideView(mContactsLv);
-				ViewUtil.showView(mSearchResultPromptTv);
-
-			}
-		}
-	}
- */
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
 		View view=inflater.inflate(R.layout.fragment_contacts_t9, container, false);
 		mContactsT9Lv=(ListView) view.findViewById(R.id.contacts_t9_list_view);
+		mSearchResultPromptTv=(TextView)view.findViewById(R.id.search_result_prompt_text_view);
+		
 		mContactsT9Lv.setAdapter(mContactsT9Adapter);
 		return view;
 	}
@@ -156,9 +139,11 @@ public class ContactsT9Fragment extends BaseFragment implements OnContactsT9Adap
 		if(null!=baseAdapter){
 			baseAdapter.notifyDataSetChanged();
 			if(baseAdapter.getCount()>0){
-				
+				ViewUtil.showView(mContactsT9Lv);
+				ViewUtil.hideView(mSearchResultPromptTv);
 			}else{
-				
+				ViewUtil.hideView(mContactsT9Lv);
+				ViewUtil.showView(mSearchResultPromptTv);
 			}
 		}
 	}
