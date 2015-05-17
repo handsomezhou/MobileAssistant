@@ -50,6 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.handsomezhou.mobileassistant.activity.CallLogDetailsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <receiver android:name="com.handsomezhou.mobileassistant.broadcastreceiver.BootReceiver" >
             <intent-filter>

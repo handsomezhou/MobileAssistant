@@ -20,7 +20,8 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 	private Context mContext;
 	private int mTextViewResourceId;
 	private List<CallRecord> mCallRecords;
-	
+	private OnCallLogAdapter mOnCallLogAdapter;
+
 	public CallLogAdapter(Context context, int textViewResourceId, List<CallRecord> callRecords) {
 		super(context, textViewResourceId, callRecords);
 		mContext=context;
@@ -28,6 +29,9 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 		mCallRecords=callRecords;
 	}
 
+	public interface OnCallLogAdapter{
+		void onCallLogDetails(CallRecord callRecord);
+	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -40,6 +44,7 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 			viewHolder.mCallTypeIv=(ImageView) view.findViewById(R.id.call_type_image_view);
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
 			viewHolder.mDateTv=(TextView) view.findViewById(R.id.date_text_view);
+			viewHolder.mCallLogDetailsIv=(ImageView) view.findViewById(R.id.call_log_details_image_view);
 			view.setTag(viewHolder);
 		}else{
 			view=convertView;
@@ -60,14 +65,36 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 		
 		viewHolder.mDateTv.setText(String.valueOf(StringUtil.getCallDate(mContext,callRecord.getDateTime())));
 		
+		viewHolder.mCallLogDetailsIv.setTag(position);
+		viewHolder.mCallLogDetailsIv.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int position=(Integer) v.getTag();
+				CallRecord callRecord=getItem(position);
+				if(null!=mOnCallLogAdapter){
+					mOnCallLogAdapter.onCallLogDetails(callRecord);
+				}
+				
+			}
+		});
 		
 		return view;
+	}
+	
+	public OnCallLogAdapter getOnCallLogAdapter() {
+		return mOnCallLogAdapter;
+	}
+
+	public void setOnCallLogAdapter(OnCallLogAdapter onCallLogAdapter) {
+		mOnCallLogAdapter = onCallLogAdapter;
 	}
 	
 	private class ViewHolder{
 		ImageView mCallTypeIv;
 		TextView mNameTv;
 		TextView mDateTv;
+		ImageView mCallLogDetailsIv;
 	}
 	
 	private int getCallTypeResId(int type){
