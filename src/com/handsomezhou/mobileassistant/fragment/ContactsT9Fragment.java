@@ -52,7 +52,7 @@ public class ContactsT9Fragment extends BaseFragment implements OnContactsT9Adap
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				Contacts contacts=ContactsHelper.getInstance().getT9SearchContacts().get(position);
+				Contacts contacts=(Contacts) parent.getItemAtPosition(position);
 				if(false==contacts.isFirstMultipleContacts()){
 					return;
 				}

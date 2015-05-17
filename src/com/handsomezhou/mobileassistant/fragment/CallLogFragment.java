@@ -1,20 +1,24 @@
 package com.handsomezhou.mobileassistant.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.activity.CallLogDetailsActivity;
 import com.handsomezhou.mobileassistant.adapter.CallLogAdapter;
 import com.handsomezhou.mobileassistant.adapter.CallLogAdapter.OnCallLogAdapter;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
 import com.handsomezhou.mobileassistant.model.CallRecord;
-
-import android.content.Intent;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
 	private static final String TAG="CallLogFragment";
@@ -38,7 +42,26 @@ public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
 
 	@Override
 	protected void initListener() {
+		mCallLogLv.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				CallRecord callRecord=(CallRecord) parent.getItemAtPosition(position);
+				//Toast.makeText(getContext(), callRecord.getContacts().getName(), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+callRecord.getContacts().getPhoneNumber()));
+				getContext().startActivity(intent);
+				
+			}
+		});
+		
+		mCallLogLv.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(getContext(), "mCallLogLv", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		});
 	}
 	
 	/*Start: OnCallLogAdapter*/
