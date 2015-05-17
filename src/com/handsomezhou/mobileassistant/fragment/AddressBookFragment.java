@@ -76,12 +76,6 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 		mAddressBookViews.add(moreAddressBookView);
 		/*End: contacts view*/
 		
-		CallRecordHelper.getInstance().setOnCallLogLoad(this);
-		CallRecordHelper.getInstance().startLoadCallRecord();
-		
-		ContactsHelper.getInstance().setOnContactsLoad(this);
-		ContactsHelper.getInstance().startLoadContacts();
-		
 		Intent  intent=new Intent(getContext(), MobileAssistantService.class);
 		intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
 		getContext().startService(intent);
@@ -161,6 +155,13 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 		});
 	
 		
+		/*Start: load base data*/
+		CallRecordHelper.getInstance().setOnCallLogLoad(this);
+		CallRecordHelper.getInstance().startLoadCallRecord();
+		
+		ContactsHelper.getInstance().setOnContactsLoad(this);
+		ContactsHelper.getInstance().startLoadContacts();
+		/*End: load base data*/
 	}
 
 	

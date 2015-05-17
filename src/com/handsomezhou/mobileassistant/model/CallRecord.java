@@ -5,7 +5,9 @@ public class CallRecord {
 	
 	private int mType;
 	private long mDate;
+	private DateTime mDateTime;//mTime details 
 	private long mDuration;
+	
 	
 	
 	public CallRecord() {
@@ -21,6 +23,7 @@ public class CallRecord {
 		getContacts().setPhoneNumber(number);
 		mType = type;
 		mDate = date;
+		mDateTime=new DateTime(date);
 		mDuration = duration;
 	}
 	
@@ -47,6 +50,14 @@ public class CallRecord {
 	
 	public void setDate(long date) {
 		mDate = date;
+	}
+	
+	public DateTime getDateTime() {
+		return mDateTime;
+	}
+
+	public void setDateTime(DateTime dateTime) {
+		mDateTime = dateTime;
 	}
 	
 	public long getDuration() {

@@ -19,7 +19,9 @@
         android:id="@+id/contacs_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alphabet_text_view" >
+        android:layout_below="@id/alphabet_text_view"
+        android:layout_marginBottom="@dimen/margin_bottom"
+        android:layout_marginTop="@dimen/margin_top" >
 
         <ImageView
             android:id="@+id/contacts_multiple_phone_operation_prompt_image_view"

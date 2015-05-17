@@ -59,6 +59,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
 			viewHolder.mPhoneNumber=(TextView) view.findViewById(R.id.phone_number_text_view);
 			viewHolder.mOperationViewIv=(ImageView) view.findViewById(R.id.operation_view_image_view);
+			viewHolder.mDivisionLineTv=(TextView)view.findViewById(R.id.division_line_text_view);
 			viewHolder.mOperationViewLayout=(View) view.findViewById(R.id.operation_view_layout);
 			viewHolder.mCallIv=(ImageView) view.findViewById(R.id.call_image_view);
 			viewHolder.mSmsIv=(ImageView) view.findViewById(R.id.sms_image_view);
@@ -145,8 +146,10 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 		int resid=(true==contacts.isHideOperationView())?(R.drawable.arrow_down):(R.drawable.arrow_up);
 		viewHolder.mOperationViewIv.setBackgroundResource(resid);
 		if(true==contacts.isHideOperationView()){
+			ViewUtil.hideView(viewHolder.mDivisionLineTv);
 			ViewUtil.hideView(viewHolder.mOperationViewLayout);
 		}else{
+			ViewUtil.showView(viewHolder.mDivisionLineTv);
 			ViewUtil.showView(viewHolder.mOperationViewLayout);
 		}
 		viewHolder.mOperationViewIv.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +254,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 		TextView mNameTv;
 		TextView mPhoneNumber;
 		ImageView mOperationViewIv;
-		
+		TextView mDivisionLineTv;
 		View mOperationViewLayout;
 		ImageView mCallIv;
 		ImageView mSmsIv;

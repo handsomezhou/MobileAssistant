@@ -135,7 +135,9 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	}
 	
 	public void updateSearch(){
-	    updateSearch(mSearchEt.getText().toString());
+		if(null!=mSearchEt){
+			updateSearch(mSearchEt.getText().toString());
+		}
 	}
 	
 	private void updateSearch(String search){
