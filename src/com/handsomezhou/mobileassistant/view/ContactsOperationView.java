@@ -16,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.adapter.ContactsQwertyAdapter;
@@ -292,7 +291,7 @@ public class ContactsOperationView extends FrameLayout implements
 					return;
 				}
 				
-				hideOrUnfoldMultipleContactsView(contacts);
+				Contacts.hideOrUnfoldMultipleContactsView(contacts);
 				
 				if(null!=mOnContactsOperationView){
 					mOnContactsOperationView.onListItemClick(contacts,position);
@@ -348,34 +347,6 @@ public class ContactsOperationView extends FrameLayout implements
 		}
 
 		return;
-	}
-	
-	private void hideOrUnfoldMultipleContactsView(Contacts contacts){
-		if(null==contacts){
-			return;
-		}
-		
-		if(null==contacts.getNextContacts()){
-			return;
-		}
-		
-		boolean hide=!contacts.getNextContacts().isHideMultipleContacts();
-		
-		Contacts currentContact=contacts.getNextContacts();
-		Contacts nextContact=null;
-		while(null!=currentContact){
-			currentContact.setHideMultipleContacts(hide);
-			nextContact=currentContact;
-			currentContact=nextContact.getNextContacts();
-		}
-
-		
-		if(hide){
-			Toast.makeText(mContext, "hideMultipleContactsView", Toast.LENGTH_SHORT).show();
-		}else{
-			Toast.makeText(mContext, "UnfoldMultipleContactsView", Toast.LENGTH_SHORT).show();
-		}
-		
 	}
 
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.pinyinsearch.model.PinyinUnit;
 
@@ -88,6 +90,20 @@ public class Contacts extends BaseContacts implements Cloneable{
 		setHideMultipleContacts(false);
 		setHideOperationView(true);
 		setBelongMultipleContactsPhone(false);
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Contacts obj=(Contacts) super.clone();
+		obj.mNamePinyinUnits=new ArrayList<PinyinUnit>();
+		for(PinyinUnit pu:mNamePinyinUnits){
+			obj.mNamePinyinUnits.add((PinyinUnit)pu.clone());
+		}
+		obj.mSearchByType=mSearchByType;
+		obj.mMatchKeywords=new StringBuffer(mMatchKeywords);
+		obj.mNextContacts=mNextContacts;
+		
+		return super.clone();
 	}
 	
 	private static Comparator<Object> mChineseComparator = Collator.getInstance(Locale.CHINA);
@@ -268,18 +284,48 @@ public class Contacts extends BaseContacts implements Cloneable{
 		
 		return null;
 	}
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Contacts obj=(Contacts) super.clone();
-		obj.mNamePinyinUnits=new ArrayList<PinyinUnit>();
-		for(PinyinUnit pu:mNamePinyinUnits){
-			obj.mNamePinyinUnits.add((PinyinUnit)pu.clone());
+
+	public static int getMultipleNumbersContactsCount(Contacts contacts){
+		int contactsCount=0;
+		if(null==contacts){
+			return contactsCount;
 		}
-		obj.mSearchByType=mSearchByType;
-		obj.mMatchKeywords=new StringBuffer(mMatchKeywords);
-		obj.mNextContacts=mNextContacts;
+		Contacts currentContacts=contacts.getNextContacts();
+		Contacts nextContacts=null;
+		while(null!=currentContacts){
+			contactsCount++;
+			nextContacts=currentContacts;
+			currentContacts=nextContacts.getNextContacts();
+		}
 		
-		return super.clone();
+		return contactsCount;
+	}
+	
+	public static void hideOrUnfoldMultipleContactsView(Contacts contacts){
+		if(null==contacts){
+			return;
+		}
+		
+		if(null==contacts.getNextContacts()){
+			return;
+		}
+		
+		boolean hide=!contacts.getNextContacts().isHideMultipleContacts();
+		
+		Contacts currentContact=contacts.getNextContacts();
+		Contacts nextContact=null;
+		while(null!=currentContact){
+			currentContact.setHideMultipleContacts(hide);
+			nextContact=currentContact;
+			currentContact=nextContact.getNextContacts();
+		}
+
+		if(hide){
+			Log.i(TAG, "hideMultipleContactsView");
+		}else{
+			Log.i(TAG, "UnfoldMultipleContactsView");
+		}
+		
 	}
 
 	

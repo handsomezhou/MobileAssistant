@@ -127,7 +127,8 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	@Override
 	public void onContactsCopy(Contacts contacts) {
 		if(null!=contacts){
-			Toast.makeText(getContext(), contacts.getName(), Toast.LENGTH_SHORT).show();
+			ShareUtil.copyText(getContext(), contacts.getName()+"\n"+contacts.getPhoneNumber());
+			Toast.makeText(getContext(), getContext().getString(R.string.copy_success), Toast.LENGTH_SHORT).show();
 		}
 		
 	}

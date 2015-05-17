@@ -1,17 +1,25 @@
 package com.handsomezhou.mobileassistant.fragment;
 
-import com.handsomezhou.mobileassistant.R;
-import com.handsomezhou.mobileassistant.adapter.ContactsT9Adapter;
-import com.handsomezhou.mobileassistant.helper.ContactsHelper;
-
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class ContactsT9Fragment extends BaseFragment {
+import com.handsomezhou.mobileassistant.R;
+import com.handsomezhou.mobileassistant.adapter.ContactsT9Adapter;
+import com.handsomezhou.mobileassistant.adapter.ContactsT9Adapter.OnContactsT9Adapter;
+import com.handsomezhou.mobileassistant.helper.ContactsHelper;
+import com.handsomezhou.mobileassistant.model.Contacts;
+import com.handsomezhou.mobileassistant.util.ShareUtil;
+
+public class ContactsT9Fragment extends BaseFragment implements OnContactsT9Adapter{
 	private static final String TAG="ContactsT9Fragment";
 	private ListView mContactsT9Lv;
 	private ContactsT9Adapter mContactsT9Adapter;
@@ -21,8 +29,31 @@ public class ContactsT9Fragment extends BaseFragment {
 		Log.i(TAG, "ContactsHelper.getInstance().getBaseContacts().size()="+ContactsHelper.getInstance().getT9SearchContacts().size());
 //		ContactsHelper.getInstance().parseT9InputSearchContacts(null);
 		mContactsT9Adapter=new ContactsT9Adapter(getContext(), R.layout.contacts_t9_list_item,ContactsHelper.getInstance().getT9SearchContacts());
+		mContactsT9Adapter.setOnContactsT9Adapter(this);
 	}
+/**
+ * public void updateContactsList() {
+		if (null == mContactsLv) {
+			return;
+		}
+		
+		ViewUtil.hideView(mContactsIndexView);
+		
+		BaseAdapter contactsAdapter = (BaseAdapter) mContactsLv.getAdapter();
+		if (null != contactsAdapter) {
+			contactsAdapter.notifyDataSetChanged();
+			if (contactsAdapter.getCount() > 0) {
+				ViewUtil.showView(mContactsLv);
+				ViewUtil.hideView(mSearchResultPromptTv);
 
+			} else {
+				ViewUtil.hideView(mContactsLv);
+				ViewUtil.showView(mSearchResultPromptTv);
+
+			}
+		}
+	}
+ */
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
 		View view=inflater.inflate(R.layout.fragment_contacts_t9, container, false);
@@ -33,9 +64,84 @@ public class ContactsT9Fragment extends BaseFragment {
 
 	@Override
 	protected void initListener() {
-		// TODO Auto-generated method stub
+		mContactsT9Lv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Contacts contacts=ContactsHelper.getInstance().getT9SearchContacts().get(position);
+				if(false==contacts.isFirstMultipleContacts()){
+					return;
+				}
+				
+				Contacts.hideOrUnfoldMultipleContactsView(contacts);
+				
+				
+			}
+		});
 
 	}
+	
+	/*Start: OnContactsT9Adapter*/
+	@Override
+	public void onAddContactsSelected(Contacts contacts) {
+		if(null==contacts){
+			return;
+		}
+		
+		Log.i(TAG, "onAddContactsSelected name=["+contacts.getName()+"] phoneNumber=["+contacts.getPhoneNumber()+"]");
+		Toast.makeText(getContext(),"Add ["+contacts.getName()+":"+contacts.getPhoneNumber()+"]", Toast.LENGTH_SHORT).show();
+		ContactsHelper.getInstance().addSelectedContacts(contacts);
+		
+	}
+
+	@Override
+	public void onRemoveContactsSelected(Contacts contacts) {
+		if(null==contacts){
+			return;
+		}
+
+		Log.i(TAG, "onRemoveContactsSelected name=["+contacts.getName()+"] phoneNumber=["+contacts.getPhoneNumber()+"]");
+		Toast.makeText(getContext(),"Remove ["+contacts.getName()+":"+contacts.getPhoneNumber()+"]", Toast.LENGTH_SHORT).show();
+		ContactsHelper.getInstance().removeSelectedContacts(contacts);
+	}
+
+	@Override
+	public void onContactsCall(Contacts contacts) {
+		if(null==contacts){
+			return;
+		}
+
+		Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+contacts.getPhoneNumber()));
+		getContext().startActivity(intent);
+	}
+
+	@Override
+	public void onContactsSms(Contacts contacts) {
+		if(null==contacts){
+			return;
+		}
+
+		//Toast.makeText(getContext(), "onContactsSms", Toast.LENGTH_SHORT).show();
+		ShareUtil.shareTextBySms(getContext(), contacts.getPhoneNumber(), null);
+	}
+
+	@Override
+	public void onContactsCopy(Contacts contacts) {
+		if(null==contacts){
+			return;
+		}
+
+		ShareUtil.copyText(getContext(), contacts.getName()+"\n"+contacts.getPhoneNumber());
+		Toast.makeText(getContext(), getContext().getString(R.string.copy_success), Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onContactsRefreshView() {
+		//Toast.makeText(getContext(), "onContactsRefreshView", Toast.LENGTH_SHORT).show();
+		updateView();
+	}
+	/*Start: OnContactsT9Adapter*/
 	
 	public void updateView(){
 		updateContactsT9Lv();
@@ -56,5 +162,6 @@ public class ContactsT9Fragment extends BaseFragment {
 			}
 		}
 	}
+
 
 }

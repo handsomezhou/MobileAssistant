@@ -27,5 +27,6 @@
     <string name="click_to_unfold">点击可展开</string>
     <string name="click_to_hide">点击可隐藏</string>
     <string name="phone_number_of_contacts">%s的号码</string>
+    <string name="copy_success">复制成功</string>
 
 </resources>

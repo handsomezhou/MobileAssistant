@@ -26,10 +26,9 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 	private Context mContext;
 	private int mTextViewResourceId;
 	private List<Contacts> mContacts;
-	private OnContactsQwertyAdapter mOnContactsAdapter;
+	private OnContactsQwertyAdapter mOnContactsQwertyAdapter;
 	
 	public interface OnContactsQwertyAdapter{
-		//void onContactsSelectedChanged(List<Contacts> contacts);
 		void onAddContactsSelected(Contacts contacts);
 		void onRemoveContactsSelected(Contacts contacts);
 		void onContactsCall(Contacts contacts);
@@ -47,36 +46,6 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 	
 	}
 	
-	public OnContactsQwertyAdapter getOnContactsAdapter() {
-		return mOnContactsAdapter;
-	}
-
-	public void setOnContactsAdapter(OnContactsQwertyAdapter onContactsAdapter) {
-		mOnContactsAdapter = onContactsAdapter;
-	}
-	
-	public void clearSelectedContacts(){
-		//clear data
-		for(Contacts contacts:mContacts){
-			contacts.setSelected(false);
-			
-			//other phoneNumber
-			
-			if(null!=contacts.getNextContacts()){
-				Contacts currentContact=contacts.getNextContacts();
-				Contacts nextContact=null;
-				while(null!=currentContact){
-					currentContact.setSelected(false);
-					nextContact=currentContact;
-					currentContact=nextContact.getNextContacts();
-				}
-			}
-		}
-		
-		//refresh view
-		notifyDataSetChanged();
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view=null;
@@ -89,7 +58,7 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			viewHolder.mContactsMultiplePhoneOperationPromptIv=(ImageView)view.findViewById(R.id.contacts_multiple_phone_operation_prompt_image_view);
 			viewHolder.mSelectContactsCB=(CheckBox) view.findViewById(R.id.select_contacts_check_box);
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
-			viewHolder.mPhoneNumber=(TextView) view.findViewById(R.id.phone_number_text_view);
+			viewHolder.mPhoneNumberTv=(TextView) view.findViewById(R.id.phone_number_text_view);
 			viewHolder.mOperationViewIv=(ImageView) view.findViewById(R.id.operation_view_image_view);
 			viewHolder.mOperationViewLayout=(View) view.findViewById(R.id.operation_view_layout);
 			viewHolder.mCallIv=(ImageView) view.findViewById(R.id.call_image_view);
@@ -110,15 +79,15 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			
 			if(false==contacts.isBelongMultipleContactsPhone()){
 				ViewUtil.hideView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
-				ViewUtil.showTextNormal(viewHolder.mPhoneNumber, contacts.getPhoneNumber());
+				ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber());
 			}else{
 				if(true==contacts.isFirstMultipleContacts()){
 					if(true==contacts.getNextContacts().isHideMultipleContacts()){
 						ViewUtil.hideView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
-						ViewUtil.showTextNormal(viewHolder.mPhoneNumber, contacts.getPhoneNumber()+mContext.getString(R.string.phone_number_count, multipleNumbersContactsCount(contacts)+1));
+						ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber()+mContext.getString(R.string.phone_number_count, Contacts.getMultipleNumbersContactsCount(contacts)+1));
 					}else{
 						ViewUtil.showView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
-						ViewUtil.showTextNormal(viewHolder.mPhoneNumber, contacts.getPhoneNumber()+"("+mContext.getString(R.string.click_to_hide)+")");
+						ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber()+"("+mContext.getString(R.string.click_to_hide)+")");
 					}
 				}else{
 					if(false==contacts.isHideMultipleContacts()){
@@ -126,19 +95,19 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 					}else{
 						ViewUtil.hideView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
 					}
-					ViewUtil.showTextNormal(viewHolder.mPhoneNumber, contacts.getPhoneNumber());
+					ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber());
 				}
 			}
 			break;
 		case SearchByPhoneNumber:
 			ViewUtil.hideView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
 			ViewUtil.showTextNormal(viewHolder.mNameTv, contacts.getName());
-			ViewUtil.showTextHighlight(viewHolder.mPhoneNumber, contacts.getPhoneNumber(), contacts.getMatchKeywords().toString());
+			ViewUtil.showTextHighlight(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber(), contacts.getMatchKeywords().toString());
 			break;
 		case SearchByName:
 			ViewUtil.hideView(viewHolder.mContactsMultiplePhoneOperationPromptIv);
 			ViewUtil.showTextHighlight(viewHolder.mNameTv, contacts.getName(), contacts.getMatchKeywords().toString());
-			ViewUtil.showTextNormal(viewHolder.mPhoneNumber, contacts.getPhoneNumber());
+			ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber());
 			break;
 		default:
 			break;
@@ -181,8 +150,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 				int position = (Integer) v.getTag();
 				Contacts contacts = getItem(position);
 				contacts.setHideOperationView(!contacts.isHideOperationView());
-				if(null!=mOnContactsAdapter){
-					mOnContactsAdapter.onContactsRefreshView();
+				if(null!=mOnContactsQwertyAdapter){
+					mOnContactsQwertyAdapter.onContactsRefreshView();
 				}	
 			}
 		});
@@ -194,8 +163,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			public void onClick(View v) {
 				int position = (Integer) v.getTag();
 				Contacts contacts = getItem(position);
-				if(null!=mOnContactsAdapter){
-					mOnContactsAdapter.onContactsCall(contacts);
+				if(null!=mOnContactsQwertyAdapter){
+					mOnContactsQwertyAdapter.onContactsCall(contacts);
 				}
 				
 			}
@@ -208,8 +177,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			public void onClick(View v) {
 				int position = (Integer) v.getTag();
 				Contacts contacts = getItem(position);
-				if(null!=mOnContactsAdapter){
-					mOnContactsAdapter.onContactsSms(contacts);
+				if(null!=mOnContactsQwertyAdapter){
+					mOnContactsQwertyAdapter.onContactsSms(contacts);
 				}
 			}
 		});
@@ -221,8 +190,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			public void onClick(View v) {
 				int position = (Integer) v.getTag();
 				Contacts contacts = getItem(position);
-				if(null!=mOnContactsAdapter){
-					mOnContactsAdapter.onContactsCopy(contacts);
+				if(null!=mOnContactsQwertyAdapter){
+					mOnContactsQwertyAdapter.onContactsCopy(contacts);
 				}
 				
 			}
@@ -264,12 +233,42 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 		return 0;
 	}
 	
+	public OnContactsQwertyAdapter getOnContactsAdapter() {
+		return mOnContactsQwertyAdapter;
+	}
+
+	public void setOnContactsAdapter(OnContactsQwertyAdapter onContactsAdapter) {
+		mOnContactsQwertyAdapter = onContactsAdapter;
+	}
+	
+	public void clearSelectedContacts(){
+		//clear data
+		for(Contacts contacts:mContacts){
+			contacts.setSelected(false);
+			
+			//other phoneNumber
+			
+			if(null!=contacts.getNextContacts()){
+				Contacts currentContact=contacts.getNextContacts();
+				Contacts nextContact=null;
+				while(null!=currentContact){
+					currentContact.setSelected(false);
+					nextContact=currentContact;
+					currentContact=nextContact.getNextContacts();
+				}
+			}
+		}
+		
+		//refresh view
+		notifyDataSetChanged();
+	}
+
 	private class ViewHolder{
 		TextView mAlphabetTv;
 		ImageView mContactsMultiplePhoneOperationPromptIv;
 		CheckBox mSelectContactsCB;
 		TextView mNameTv;
-		TextView mPhoneNumber;
+		TextView mPhoneNumberTv;
 		ImageView mOperationViewIv;
 		
 		View mOperationViewLayout;
@@ -329,8 +328,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 				break;
 			}
 			
-			if(null!=mOnContactsAdapter){
-				mOnContactsAdapter.onAddContactsSelected(contacts);
+			if(null!=mOnContactsQwertyAdapter){
+				mOnContactsQwertyAdapter.onAddContactsSelected(contacts);
 			}
 			
 			return true;
@@ -345,34 +344,8 @@ public class ContactsQwertyAdapter extends ArrayAdapter<Contacts> implements Sec
 			return;
 		}
 		
-		if(null!=mOnContactsAdapter){
-			mOnContactsAdapter.onRemoveContactsSelected(contacts);
+		if(null!=mOnContactsQwertyAdapter){
+			mOnContactsQwertyAdapter.onRemoveContactsSelected(contacts);
 		}
 	}
-	
-	private int multipleNumbersContactsCount(Contacts contacts){
-		int contactsCount=0;
-		if(null==contacts){
-			return contactsCount;
-		}
-		Contacts currentContacts=contacts.getNextContacts();
-		Contacts nextContacts=null;
-		while(null!=currentContacts){
-			contactsCount++;
-			nextContacts=currentContacts;
-			currentContacts=nextContacts.getNextContacts();
-		}
-		
-		return contactsCount;
-	}
-	/**
-	 * key=id+phoneNumber
-	 * */
-	/*private String getSelectedContactsKey(Contacts contacts){
-		if(null==contacts){
-			return null;
-		}
-		
-		return contacts.getId()+contacts.getPhoneNumber();
-	}*/
 }
