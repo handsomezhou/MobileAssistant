@@ -275,6 +275,8 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 			}else{
 				showCallView();
 			}
+			Fragment telephoneFragment=mAddressBookViews.get(getAddressBookViewItem(BOTTOM_TAB_TAG.CALL)).getFragment();
+			((TelephoneFragment) telephoneFragment).updateSearch();
 			break;
 
 		default:

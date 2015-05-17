@@ -151,9 +151,21 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	}
 
 	
-    public void updateSearch(){  
-        updateSearch(mT9TelephoneDialpadView.getT9Input());
-    }
+	public void updateSearch() {
+		updateSearch(mT9TelephoneDialpadView.getT9Input());
+		switch (mCustomViewPager.getCurrentItem()) {
+		case FRAGMENT_INDEX_CALL_LOG:
+			updateCallLogFragment();
+			break;
+		case FRAGMENT_INDEX_CONTACTS_T9:
+			updateContactsT9Fragment();
+			break;
+		default:
+			break;
+		}
+		;
+
+	}
     
     private void updateSearch(String search){
         String curCharacter;
@@ -197,36 +209,37 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	}
 
 	public void callLogLoadSuccess(){
-		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
-		if(callLogFragment instanceof CallLogFragment){
-			((CallLogFragment) callLogFragment).updateView();
-		}
+		updateCallLogFragment();
 		return;
 	}
 	
 	public void callLogLoadFailed(){
-		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
-		if(callLogFragment instanceof CallLogFragment){
-			((CallLogFragment) callLogFragment).updateView();
-		}
+		updateCallLogFragment();
 		return;
 	}
 	
 	public void contactsLoadSuccess(){
-		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
-		if(contactsT9Fragment instanceof ContactsT9Fragment){
-			updateSearch(null);
-			((ContactsT9Fragment) contactsT9Fragment).updateView();
-		}
+		updateSearch(null);
+		updateContactsT9Fragment();
 		return;
 	}
 	
 	public void contactsLoadFailed(){
+		updateContactsT9Fragment();
+		return;
+	}
+	
+	private void updateCallLogFragment(){
+		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
+		if(callLogFragment instanceof CallLogFragment){
+			((CallLogFragment) callLogFragment).updateView();
+		}
+	}
+	
+	private void updateContactsT9Fragment(){
 		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
 		if(contactsT9Fragment instanceof ContactsT9Fragment){
 			((ContactsT9Fragment) contactsT9Fragment).updateView();
 		}
-		return;
 	}
-	
 }

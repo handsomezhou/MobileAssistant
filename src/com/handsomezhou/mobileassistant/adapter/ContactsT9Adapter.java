@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.model.Contacts;
+import com.handsomezhou.mobileassistant.util.ViewUtil;
 
 public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 	private Context mContext;
@@ -35,14 +36,32 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 			view=LayoutInflater.from(mContext).inflate(mTextViewResourceId, null);
 			viewHolder=new ViewHolder();
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
+			viewHolder.mPhoneNumberTv=(TextView) view.findViewById(R.id.phone_number_text_view);
+			
 			view.setTag(viewHolder);
 		}else{
 			view=convertView;
 			viewHolder=(ViewHolder) view.getTag();
 		}
-		
-		//viewHolder.mNameTv.setText(contacts.getName());
-		viewHolder.mNameTv.setText(contacts.getName());
+				
+		switch (contacts.getSearchByType()) {
+		case SearchByNull:
+			ViewUtil.showTextNormal(viewHolder.mNameTv, contacts.getName());
+			ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber());
+			
+			break;
+		case SearchByPhoneNumber:
+			
+			ViewUtil.showTextNormal(viewHolder.mNameTv, contacts.getName());
+			ViewUtil.showTextHighlight(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber(), contacts.getMatchKeywords().toString());
+			break;
+		case SearchByName:
+			ViewUtil.showTextHighlight(viewHolder.mNameTv, contacts.getName(), contacts.getMatchKeywords().toString());
+			ViewUtil.showTextNormal(viewHolder.mPhoneNumberTv, contacts.getPhoneNumber());
+			break;
+		default:
+			break;
+		}	
 		
 		return view;
 	}
@@ -50,6 +69,7 @@ public class ContactsT9Adapter extends ArrayAdapter<Contacts> {
 
 	private class ViewHolder{
 		TextView mNameTv;
+		TextView mPhoneNumberTv;
 	}
 
 }
