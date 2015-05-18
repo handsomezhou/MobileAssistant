@@ -21,7 +21,9 @@ public class CustomPhoneStateListener extends PhoneStateListener {
 			Log.i(TAG, "state:["+state+"]"+"incomingNumber:["+incomingNumber+"]");
 			if((getmLastState()==TelephonyManager.CALL_STATE_RINGING)||(getmLastState()==TelephonyManager.CALL_STATE_OFFHOOK)){
 				CallRecordHelper.getInstance().setCallLogChanged(true);
-				//CallRecordHelper.getInstance().startLoadCallRecord();
+				
+				Log.i(TAG, "state:["+state+"]"+"CallLogChanged:["+CallRecordHelper.getInstance().isCallLogChanged()+"]");
+				
 			}
 			break;
 			

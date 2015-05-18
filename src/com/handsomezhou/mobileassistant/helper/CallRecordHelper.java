@@ -19,7 +19,7 @@ public class CallRecordHelper {
 	private Context mContext;
 	private static CallRecordHelper mInstance = null;
 	private List<CallRecord> mBaseCallRecord=null;
-	private AsyncTask<Object, Object, List<CallRecord>> mLoadTask = null;
+	private AsyncTask<Object, List<CallRecord> , List<CallRecord>> mLoadTask = null;
 	private OnCallLogLoad mOnCallLogLoad;
 	private static boolean mCallLogChanged=true;
 
@@ -65,6 +65,7 @@ public class CallRecordHelper {
 	}
 	
 	public boolean startLoadCallRecord(){
+		Log.i(TAG, "isCallLogChanged"+isCallLogChanged());
 		if(false==isCallLogChanged()){
 			return false;
 		}
@@ -72,22 +73,29 @@ public class CallRecordHelper {
 		if(true==isSearching()){
 			return false;
 		}
-		
-		mLoadTask = new AsyncTask<Object, Object, List<CallRecord>>() {
+		Log.i(TAG, "after isCallLogChanged"+isCallLogChanged());
+		mLoadTask = new AsyncTask<Object, List<CallRecord>, List<CallRecord>>() {
 
 			@Override
 			protected List<CallRecord> doInBackground(Object... params) {
 				return loadCallRecord(mContext);
 			}
 
+			
+			@Override
+			protected void onProgressUpdate(List<CallRecord>... values) {
+				parseCallRecord(values[0]);//may be refresh ui in the callback function of the function
+			}
+
+
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(List<CallRecord> result) {
-				parseCallRecord(result);
-				setCallLogChanged(false);
+				publishProgress(result);
 				mLoadTask = null;
-				super.onPostExecute(result);
 			}
 		}.execute();
+		setCallLogChanged(false);
 
 		return true;
 

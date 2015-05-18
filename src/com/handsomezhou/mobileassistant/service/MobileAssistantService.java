@@ -71,7 +71,7 @@ public class MobileAssistantService extends Service {
 					super.onChange(selfChange);
 					ContactsHelper.getInstance().setContactsChanged(true);
 					//ContactsHelper.getInstance().startLoadContacts(); //Reparsed contacts when contacts change
-					Log.i(TAG, "Contacts onChange");
+					Log.i(TAG, "Contacts onChange"+ContactsHelper.getInstance().isContactsChanged());
 				}
 
 			};

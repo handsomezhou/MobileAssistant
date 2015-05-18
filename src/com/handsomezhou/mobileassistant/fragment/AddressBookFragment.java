@@ -50,6 +50,20 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
     
     
 	@Override
+	public void onResume() {
+		Log.i(TAG, "onResume");
+		/*Start: restart load base data*/
+		Log.i(TAG, "CallRecordHelper.getInstance().isCallLogChanged()"+CallRecordHelper.getInstance().isCallLogChanged());
+		CallRecordHelper.getInstance().setOnCallLogLoad(this);		
+		CallRecordHelper.getInstance().startLoadCallRecord(); 	//Can not restart load when callLog not changed
+		ContactsHelper.getInstance().setOnContactsLoad(this);
+		Log.i(TAG, "ContactsHelper.getInstance().isCallLogChanged()"+ContactsHelper.getInstance().isContactsChanged());
+		ContactsHelper.getInstance().startLoadContacts();		//can not restart load when contacts not changed
+		/*End: restart load base data*/
+		super.onResume();
+	}
+
+	@Override
 	protected void initData() {
 		setContext(getActivity());
 		mAddressBookViews=new ArrayList<AddressBookView>();
@@ -76,12 +90,17 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 		mAddressBookViews.add(moreAddressBookView);
 		/*End: contacts view*/
 		
+		/*Start: load base data*/
+		CallRecordHelper.getInstance().setOnCallLogLoad(this);
+		CallRecordHelper.getInstance().startLoadCallRecord();
+		
+		ContactsHelper.getInstance().setOnContactsLoad(this);
+		ContactsHelper.getInstance().startLoadContacts();
+		/*End: load base data*/
+		
 		Intent  intent=new Intent(getContext(), MobileAssistantService.class);
 		intent.setAction(MobileAssistantService.ACTION_MOBILE_ASSISTANT_SERVICE);
 		getContext().startService(intent);
-		
-	
-		
 	}
 
 	@Override
@@ -154,14 +173,6 @@ public class AddressBookFragment extends BaseFragment implements OnTabChange,OnC
 			}
 		});
 	
-		
-		/*Start: load base data*/
-		CallRecordHelper.getInstance().setOnCallLogLoad(this);
-		CallRecordHelper.getInstance().startLoadCallRecord();
-		
-		ContactsHelper.getInstance().setOnContactsLoad(this);
-		ContactsHelper.getInstance().startLoadContacts();
-		/*End: load base data*/
 	}
 
 	

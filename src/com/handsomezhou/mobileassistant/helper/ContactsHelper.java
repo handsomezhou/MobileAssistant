@@ -44,7 +44,7 @@ public class ContactsHelper {
 	private List<Contacts> mQwertySearchContacts=null;
 	private static StringBuffer  mQwertyFirstNoSearchResultInput=null;
 	
-	private AsyncTask<Object, Object, List<Contacts>> mLoadTask = null;
+	private AsyncTask<Object,  List<Contacts>, List<Contacts>> mLoadTask = null;
 	private OnContactsLoad mOnContactsLoad = null;
 
 	private static boolean mContactsChanged = true;
@@ -119,11 +119,11 @@ public class ContactsHelper {
 		mOnContactsLoad = onContactsLoad;
 	}
 
-	public boolean isContactsChanged() {
+	public static boolean isContactsChanged() {
 		return mContactsChanged;
 	}
 
-	public void setContactsChanged(boolean contactsChanged) {
+	public static void setContactsChanged(boolean contactsChanged) {
 		mContactsChanged = contactsChanged;
 	}
 	
@@ -143,15 +143,18 @@ public class ContactsHelper {
 	 */
 	public boolean startLoadContacts() {
 	
+		Log.i(TAG, "startLoadContacts");
 		if (true == isSearching()) {
 			return false;
 		}
 		
+		Log.i(TAG, "after startLoadContacts");
 		if (false == isContactsChanged()) {
 			return false;
 		}
+		Log.i(TAG, "after after startLoadContacts");
 	
-		mLoadTask = new AsyncTask<Object, Object,List<Contacts>>() {
+		mLoadTask = new AsyncTask<Object,  List<Contacts> ,List<Contacts>>() {
 
 			@Override
 			protected List<Contacts> doInBackground(Object... params) {
@@ -159,15 +162,22 @@ public class ContactsHelper {
 				return loadContacts(mContext);
 			}
 
+			
+			@Override
+			protected void onProgressUpdate(List<Contacts>... values) {
+				parseContacts(values[0]);//may be refresh ui in the callback function of the function
+			}
+
+
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(List<Contacts> result) {
-				
-				parseContacts(result);
-				super.onPostExecute(result);
-				setContactsChanged(false);
+				publishProgress(result);
 				mLoadTask = null;
+				Log.i(TAG, "onPostExecute");
 			}
 		}.execute();
+		setContactsChanged(false);
 
 		return true;
 	}
@@ -682,7 +692,6 @@ public class ContactsHelper {
 	}
 	
 	private void parseContacts(List<Contacts> contacts) {
-		
 		if (null == contacts || contacts.size() < 1) {
 			if (null != mOnContactsLoad) {
 				mOnContactsLoad.onContactsLoadFailed();
