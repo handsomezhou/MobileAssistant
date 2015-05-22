@@ -14,35 +14,35 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
-import com.handsomezhou.mobileassistant.activity.CallLogDetailsActivity;
-import com.handsomezhou.mobileassistant.adapter.CallLogAdapter;
-import com.handsomezhou.mobileassistant.adapter.CallLogAdapter.OnCallLogAdapter;
+import com.handsomezhou.mobileassistant.activity.CallRecordDetailsActivity;
+import com.handsomezhou.mobileassistant.adapter.CallRecordAdapter;
+import com.handsomezhou.mobileassistant.adapter.CallRecordAdapter.OnCallRecordAdapter;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
 import com.handsomezhou.mobileassistant.model.CallRecord;
 
-public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
-	private static final String TAG="CallLogFragment";
-	private ListView mCallLogLv;
-	private CallLogAdapter mCallLogAdapter;
+public class CallRecordFragment extends BaseFragment implements OnCallRecordAdapter{
+	private static final String TAG="CallRecordFragment";
+	private ListView mCallRecordLv;
+	private CallRecordAdapter mCallRecordAdapter;
 	@Override
 	protected void initData() {
 		setContext(getActivity());
 		Log.i(TAG, "CallRecordHelper.getInstance().getBaseCallRecord()="+CallRecordHelper.getInstance().getBaseCallRecord().size());
-		mCallLogAdapter=new CallLogAdapter(getContext(), R.layout.call_log_list_item, CallRecordHelper.getInstance().getBaseCallRecord());
-		mCallLogAdapter.setOnCallLogAdapter(this);
+		mCallRecordAdapter=new CallRecordAdapter(getContext(), R.layout.call_record_list_item, CallRecordHelper.getInstance().getBaseCallRecord());
+		mCallRecordAdapter.setOnCallLogAdapter(this);
 	}
 
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
-		View view=inflater.inflate(R.layout.fragment_call_log, container, false);
-		mCallLogLv=(ListView) view.findViewById(R.id.call_log_list_view);
-		mCallLogLv.setAdapter(mCallLogAdapter);
+		View view=inflater.inflate(R.layout.fragment_call_record, container, false);
+		mCallRecordLv=(ListView) view.findViewById(R.id.call_log_list_view);
+		mCallRecordLv.setAdapter(mCallRecordAdapter);
 		return view;
 	}
 
 	@Override
 	protected void initListener() {
-		mCallLogLv.setOnItemClickListener(new OnItemClickListener() {
+		mCallRecordLv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,7 +54,7 @@ public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
 			}
 		});
 		
-		mCallLogLv.setOnLongClickListener(new OnLongClickListener() {
+		mCallRecordLv.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
 			public boolean onLongClick(View v) {
@@ -71,7 +71,7 @@ public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
 			return;
 		}
 		
-		Intent intent=new Intent(getActivity(), CallLogDetailsActivity.class);
+		Intent intent=new Intent(getActivity(), CallRecordDetailsActivity.class);
 		startActivity(intent);
 		//Toast.makeText(getContext(), callRecord.getContacts().getName(), Toast.LENGTH_SHORT).show();
 		
@@ -82,11 +82,11 @@ public class CallLogFragment extends BaseFragment implements OnCallLogAdapter{
 	}
 	
 	private void updateCallLogLv(){
-		if(null==mCallLogLv){
+		if(null==mCallRecordLv){
 			return;
 		}
 		
-		BaseAdapter baseAdapter=(BaseAdapter)mCallLogLv.getAdapter();
+		BaseAdapter baseAdapter=(BaseAdapter)mCallRecordLv.getAdapter();
 		if(null!=baseAdapter){
 			baseAdapter.notifyDataSetChanged();
 			if(baseAdapter.getCount()>0){

@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.handsomezhou.mobileassistant.activity.CallLogDetailsActivity"
+            android:name="com.handsomezhou.mobileassistant.activity.CallRecordDetailsActivity"
             android:screenOrientation="portrait" >
         </activity>
 

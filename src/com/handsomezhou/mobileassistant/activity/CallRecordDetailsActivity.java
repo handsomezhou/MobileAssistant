@@ -1,15 +1,15 @@
 package com.handsomezhou.mobileassistant.activity;
 
-import com.handsomezhou.mobileassistant.fragment.CallLogDetailsFragment;
+import com.handsomezhou.mobileassistant.fragment.CallRecordDetailsFragment;
 
 import android.support.v4.app.Fragment;
 
-public class CallLogDetailsActivity extends BaseSingleFragmentActivity {
+public class CallRecordDetailsActivity extends BaseSingleFragmentActivity {
 
 	@Override
 	protected Fragment createFragment() {
 		
-		return new CallLogDetailsFragment();
+		return new CallRecordDetailsFragment();
 	}
 
 	@Override

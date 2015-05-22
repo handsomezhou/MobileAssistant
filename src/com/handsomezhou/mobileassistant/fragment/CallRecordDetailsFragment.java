@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class CallLogDetailsFragment extends BaseFragment {
+public class CallRecordDetailsFragment extends BaseFragment {
 
 	@Override
 	protected void initData() {
@@ -16,7 +16,7 @@ public class CallLogDetailsFragment extends BaseFragment {
 
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
-		View view=inflater.inflate(R.layout.fragment_call_log_details, container, false);
+		View view=inflater.inflate(R.layout.fragment_call_record_details, container, false);
 		return view;
 	}
 

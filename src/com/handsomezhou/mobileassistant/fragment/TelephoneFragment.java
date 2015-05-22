@@ -45,7 +45,7 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 		if(null!=mFragments){
 			
 			
-			Fragment callLogFragment = new CallLogFragment();
+			Fragment callLogFragment = new CallRecordFragment();
 			if (null != callLogFragment) {
 				mFragments.add(callLogFragment);
 			}
@@ -229,8 +229,8 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	
 	private void updateCallLogFragment(){
 		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
-		if(callLogFragment instanceof CallLogFragment){
-			((CallLogFragment) callLogFragment).updateView();
+		if(callLogFragment instanceof CallRecordFragment){
+			((CallRecordFragment) callLogFragment).updateView();
 		}
 	}
 	

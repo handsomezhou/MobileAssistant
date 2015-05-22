@@ -16,20 +16,20 @@ import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.model.CallRecord;
 import com.handsomezhou.mobileassistant.util.StringUtil;
 
-public class CallLogAdapter extends ArrayAdapter<CallRecord> {
+public class CallRecordAdapter extends ArrayAdapter<CallRecord> {
 	private Context mContext;
 	private int mTextViewResourceId;
 	private List<CallRecord> mCallRecords;
-	private OnCallLogAdapter mOnCallLogAdapter;
+	private OnCallRecordAdapter mOnCallRecordAdapter;
 
-	public CallLogAdapter(Context context, int textViewResourceId, List<CallRecord> callRecords) {
+	public CallRecordAdapter(Context context, int textViewResourceId, List<CallRecord> callRecords) {
 		super(context, textViewResourceId, callRecords);
 		mContext=context;
 		mTextViewResourceId=textViewResourceId;
 		mCallRecords=callRecords;
 	}
 
-	public interface OnCallLogAdapter{
+	public interface OnCallRecordAdapter{
 		void onCallLogDetails(CallRecord callRecord);
 	}
 	
@@ -44,7 +44,7 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 			viewHolder.mCallTypeIv=(ImageView) view.findViewById(R.id.call_type_image_view);
 			viewHolder.mNameTv=(TextView) view.findViewById(R.id.name_text_view);
 			viewHolder.mDateTv=(TextView) view.findViewById(R.id.date_text_view);
-			viewHolder.mCallLogDetailsIv=(ImageView) view.findViewById(R.id.call_log_details_image_view);
+			viewHolder.mCallRecordDetailsIv=(ImageView) view.findViewById(R.id.call_record_details_image_view);
 			view.setTag(viewHolder);
 		}else{
 			view=convertView;
@@ -65,15 +65,15 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 		
 		viewHolder.mDateTv.setText(String.valueOf(StringUtil.getCallDate(mContext,callRecord.getDateTime())));
 		
-		viewHolder.mCallLogDetailsIv.setTag(position);
-		viewHolder.mCallLogDetailsIv.setOnClickListener(new View.OnClickListener() {
+		viewHolder.mCallRecordDetailsIv.setTag(position);
+		viewHolder.mCallRecordDetailsIv.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				int position=(Integer) v.getTag();
 				CallRecord callRecord=getItem(position);
-				if(null!=mOnCallLogAdapter){
-					mOnCallLogAdapter.onCallLogDetails(callRecord);
+				if(null!=mOnCallRecordAdapter){
+					mOnCallRecordAdapter.onCallLogDetails(callRecord);
 				}
 				
 			}
@@ -82,19 +82,19 @@ public class CallLogAdapter extends ArrayAdapter<CallRecord> {
 		return view;
 	}
 	
-	public OnCallLogAdapter getOnCallLogAdapter() {
-		return mOnCallLogAdapter;
+	public OnCallRecordAdapter getOnCallLogAdapter() {
+		return mOnCallRecordAdapter;
 	}
 
-	public void setOnCallLogAdapter(OnCallLogAdapter onCallLogAdapter) {
-		mOnCallLogAdapter = onCallLogAdapter;
+	public void setOnCallLogAdapter(OnCallRecordAdapter onCallLogAdapter) {
+		mOnCallRecordAdapter = onCallLogAdapter;
 	}
 	
 	private class ViewHolder{
 		ImageView mCallTypeIv;
 		TextView mNameTv;
 		TextView mDateTv;
-		ImageView mCallLogDetailsIv;
+		ImageView mCallRecordDetailsIv;
 	}
 	
 	private int getCallTypeResId(int type){
