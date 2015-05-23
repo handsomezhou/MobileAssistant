@@ -228,6 +228,10 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	}
 	
 	private void updateCallLogFragment(){
+		if((null==mFragments)||(mFragments.size()<=FRAGMENT_INDEX_CALL_LOG)){
+			return;
+		}
+		
 		Fragment callLogFragment=mFragments.get(FRAGMENT_INDEX_CALL_LOG);
 		if(callLogFragment instanceof CallRecordFragment){
 			((CallRecordFragment) callLogFragment).updateView();
@@ -235,6 +239,10 @@ public class TelephoneFragment extends BaseFragment implements OnT9TelephoneDial
 	}
 	
 	private void updateContactsT9Fragment(){
+		if((null==mFragments)||(mFragments.size()<=FRAGMENT_INDEX_CONTACTS_T9)){
+			return;
+		}
+		
 		Fragment contactsT9Fragment=mFragments.get(FRAGMENT_INDEX_CONTACTS_T9);
 		if(contactsT9Fragment instanceof ContactsT9Fragment){
 			((ContactsT9Fragment) contactsT9Fragment).updateView();

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.provider.CallLog;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.handsomezhou.mobileassistant.application.MobileAssistantApplication;
@@ -136,6 +137,10 @@ public class CallRecordHelper {
 				int type=Integer.valueOf(cursor.getString(typeIndex));
 				long date=Long.valueOf(cursor.getString(dateIndex));
 				long duration=Long.valueOf(cursor.getString(durationIndex));
+				
+				if((TextUtils.isEmpty(name))||(TextUtils.isEmpty(number))){
+					continue;
+				}
 				
 				cr=new CallRecord(id, name, number, type, date, duration);
 				callRecords.add(cr);
