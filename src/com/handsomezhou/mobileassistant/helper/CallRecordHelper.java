@@ -106,7 +106,9 @@ public class CallRecordHelper {
 	
 	private void initCallRecordHelper(){
 		mContext=MobileAssistantApplication.getContextObject();
-		setBaseCallRecord(new ArrayList<CallRecord>());
+		if(null==mBaseCallRecord){
+			mBaseCallRecord=new ArrayList<CallRecord>();
+		}
 		setCallLogChanged(true);
 		return;
 	}
@@ -188,6 +190,7 @@ public class CallRecordHelper {
 		if(null!=mOnCallLogLoad){
 			mOnCallLogLoad.onCallLogLoadSuccess();
 		}
+		Log.i(TAG, "mBaseCallRecord.size()"+mBaseCallRecord.size());
 	}
 	
 	

@@ -30,7 +30,7 @@ public class CallRecordAdapter extends ArrayAdapter<CallRecord> {
 	}
 
 	public interface OnCallRecordAdapter{
-		void onCallLogDetails(CallRecord callRecord);
+		void onCallLogDetails(CallRecord callRecord,int position);
 	}
 	
 	@Override
@@ -73,7 +73,7 @@ public class CallRecordAdapter extends ArrayAdapter<CallRecord> {
 				int position=(Integer) v.getTag();
 				CallRecord callRecord=getItem(position);
 				if(null!=mOnCallRecordAdapter){
-					mOnCallRecordAdapter.onCallLogDetails(callRecord);
+					mOnCallRecordAdapter.onCallLogDetails(callRecord,position);
 				}
 				
 			}

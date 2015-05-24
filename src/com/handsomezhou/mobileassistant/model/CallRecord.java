@@ -1,6 +1,8 @@
 package com.handsomezhou.mobileassistant.model;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class CallRecord implements Cloneable{
 	private Contacts mContacts; 
@@ -60,6 +62,27 @@ public class CallRecord implements Cloneable{
 		
 	};
 	
+	/**
+	 * convert the variable of CallRecord to the list of CallRecord
+	 * @param callRecord
+	 * @return
+	 */
+	public static List<CallRecord> praseCallRecords(CallRecord callRecord){
+		List<CallRecord> callRecords=new ArrayList<CallRecord>();
+		do{
+			if(null==callRecord){
+				break;
+			}
+			CallRecord currentCallRecord=callRecord;
+			while(null!=currentCallRecord){
+				callRecords.add(currentCallRecord);
+				currentCallRecord=currentCallRecord.getNextCallRecord();
+			}
+			break;
+		}while(false);
+		
+		return callRecords;
+	}
 	
 	public Contacts getContacts() {
 		return mContacts;
@@ -117,4 +140,5 @@ public class CallRecord implements Cloneable{
 		mNextCallRecord = nextCallRecord;
 	}
 
+	
 }

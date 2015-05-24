@@ -2,6 +2,7 @@ package com.handsomezhou.mobileassistant.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.handsomezhou.mobileassistant.adapter.CallRecordAdapter;
 import com.handsomezhou.mobileassistant.adapter.CallRecordAdapter.OnCallRecordAdapter;
 import com.handsomezhou.mobileassistant.helper.CallRecordHelper;
 import com.handsomezhou.mobileassistant.model.CallRecord;
+import com.handsomezhou.mobileassistant.model.CallRecordDetailsParameter;
 
 public class CallRecordFragment extends BaseFragment implements OnCallRecordAdapter{
 	private static final String TAG="CallRecordFragment";
@@ -66,12 +68,17 @@ public class CallRecordFragment extends BaseFragment implements OnCallRecordAdap
 	
 	/*Start: OnCallLogAdapter*/
 	@Override
-	public void onCallLogDetails(CallRecord callRecord) {
+	public void onCallLogDetails(CallRecord callRecord,int position) {
 		if(null==callRecord){
 			return;
 		}
 		
 		Intent intent=new Intent(getActivity(), CallRecordDetailsActivity.class);
+		Bundle bundle=new Bundle();
+		CallRecordDetailsParameter callRecordDetailsParameter=new CallRecordDetailsParameter();
+		callRecordDetailsParameter.setCurrentIndex(position);
+		bundle.putSerializable(CallRecordDetailsFragment.EXTRA_CALL_RECORD_DETAILS_PARAMETER,callRecordDetailsParameter);
+		intent.putExtras(bundle);
 		startActivity(intent);
 		//Toast.makeText(getContext(), callRecord.getContacts().getName(), Toast.LENGTH_SHORT).show();
 		
