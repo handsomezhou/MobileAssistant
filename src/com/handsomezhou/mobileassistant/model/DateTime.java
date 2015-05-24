@@ -2,7 +2,7 @@ package com.handsomezhou.mobileassistant.model;
 
 import java.util.Calendar;
 
-public class DateTime {
+public class DateTime implements Cloneable{
 	private int mYear;
 	private int mMonth;
 	private int mDayOfMonth;
@@ -45,6 +45,11 @@ public class DateTime {
 		this.mSecond = calendar.get(Calendar.SECOND);
 	}
 	
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 	public int getYear() {
 		return mYear;

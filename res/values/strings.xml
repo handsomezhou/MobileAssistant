@@ -22,6 +22,7 @@
      <string name="today">今天</string>
      <string name="yesterday">昨天</string>
      <string name="the_day_before_yesterday">前天</string>
+     <string name="call_record_details">通话详情</string>
      
     <!-- End: Call log -->
     

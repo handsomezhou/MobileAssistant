@@ -1,6 +1,8 @@
 package com.handsomezhou.mobileassistant.helper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -115,6 +117,7 @@ public class CallRecordHelper {
 	
 	private List<CallRecord> loadCallRecord(Context context){
 		List<CallRecord> callRecords=new ArrayList<CallRecord>();
+		HashMap<String, CallRecord> callRecordHashMap=new HashMap<String, CallRecord>();
 		
 		CallRecord cr=null;
 		Cursor cursor=null;
@@ -138,17 +141,30 @@ public class CallRecordHelper {
 				long date=Long.valueOf(cursor.getString(dateIndex));
 				long duration=Long.valueOf(cursor.getString(durationIndex));
 				
-				if((TextUtils.isEmpty(name))||(TextUtils.isEmpty(number))){
+				if(/*(TextUtils.isEmpty(name))||*/(TextUtils.isEmpty(number))||!((type>=CallLog.Calls.INCOMING_TYPE)&&(type<=CallLog.Calls.MISSED_TYPE))){
 					continue;
 				}
 				
+				boolean callRecordBelongSameContactsExist=callRecordHashMap.containsKey(number);
 				cr=new CallRecord(id, name, number, type, date, duration);
-				callRecords.add(cr);
+				if(true==callRecordBelongSameContactsExist){
+					CallRecord curCallRecord=callRecordHashMap.get(number);
+					curCallRecord.setNextCallRecord(cr);
+					
+				}else{
+					callRecordHashMap.put(number, cr);
+				}
+				//callRecords.add(cr);
 			}
 			
-			cursor.close();
-			cursor=null;
+			if(null!=cursor){
+				cursor.close();
+				cursor=null;
+			}
+			callRecords.addAll(callRecordHashMap.values());
+			Collections.sort(callRecords,CallRecord.mDesByDate);
 		}
+		
 		long endLoadTime=System.currentTimeMillis();
 		Log.i(TAG, "endLoadTime-startLoadTime=["+(endLoadTime-startLoadTime)+"]callRecords.size()["+callRecords.size()+"]");
 		return callRecords;
@@ -173,6 +189,7 @@ public class CallRecordHelper {
 			mOnCallLogLoad.onCallLogLoadSuccess();
 		}
 	}
+	
 	
 	private void showCallRecord(CallRecord callRecord){
 		if(null==callRecord){

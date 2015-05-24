@@ -54,7 +54,7 @@ public class CallRecordAdapter extends ArrayAdapter<CallRecord> {
 		viewHolder.mCallTypeIv.setBackgroundResource(getCallTypeResId(callRecord.getType()));
 		
 		if(!TextUtils.isEmpty(callRecord.getContacts().getName())){
-			viewHolder.mNameTv.setText(callRecord.getContacts().getName());
+			viewHolder.mNameTv.setText(callRecord.getContacts().getName()+":"+callRecord.getContacts().getPhoneNumber());
 		}else{
 			if(!TextUtils.isEmpty(callRecord.getContacts().getPhoneNumber())){
 				viewHolder.mNameTv.setText(callRecord.getContacts().getPhoneNumber());
