@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/call_log_item_selector"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/call_log_item_selector" >
 
     <ImageView
         android:id="@+id/call_type_image_view"
@@ -21,13 +21,13 @@
 
     <ImageView
         android:id="@+id/call_record_details_image_view"
-        android:layout_width="@dimen/icon_width"
-        android:layout_height="@dimen/icon_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/margin"
-        android:clickable="true"
         android:background="@drawable/call_log_details_selector"
+        android:clickable="true"
         android:contentDescription="@string/app_name" />
 
     <TextView

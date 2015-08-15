@@ -48,7 +48,7 @@
         <Button
             android:id="@+id/dialNum1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num1_ic_selector"
             android:tag="1" />
@@ -56,7 +56,7 @@
         <Button
             android:id="@+id/dialNum2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num2_ic_selector"
             android:tag="2" />
@@ -64,7 +64,7 @@
         <Button
             android:id="@+id/dialNum3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num3_ic_selector"
             android:tag="3" />
@@ -78,7 +78,7 @@
         <Button
             android:id="@+id/dialNum4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num4_ic_selector"
             android:tag="4" />
@@ -86,7 +86,7 @@
         <Button
             android:id="@+id/dialNum5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num5_ic_selector"
             android:tag="5" />
@@ -94,7 +94,7 @@
         <Button
             android:id="@+id/dialNum6"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num6_ic_selector"
             android:tag="6" />
@@ -108,7 +108,7 @@
         <Button
             android:id="@+id/dialNum7"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num7_ic_selector"
             android:tag="7" />
@@ -116,7 +116,7 @@
         <Button
             android:id="@+id/dialNum8"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num8_ic_selector"
             android:tag="8" />
@@ -124,7 +124,7 @@
         <Button
             android:id="@+id/dialNum9"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num9_ic_selector"
             android:tag="9" />
@@ -138,7 +138,7 @@
         <Button
             android:id="@+id/dialx"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/dialx_ic_selector"
             android:tag="*" />
@@ -146,7 +146,7 @@
         <Button
             android:id="@+id/dialNum0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/num0_ic_selector"
             android:tag="0" />
@@ -154,7 +154,7 @@
         <Button
             android:id="@+id/dialj"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/dialj_ic_selector"
             android:tag="#" />

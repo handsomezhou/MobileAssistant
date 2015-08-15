@@ -90,8 +90,8 @@
 
         <ImageView
             android:id="@+id/call_image_view"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/margin_right"
             android:background="@drawable/call"
@@ -99,8 +99,8 @@
 
         <ImageView
             android:id="@+id/sms_image_view"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/index_view_width"
             android:layout_toRightOf="@id/call_image_view"
@@ -109,8 +109,8 @@
 
         <ImageView
             android:id="@+id/copy_image_view"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/index_view_width"
