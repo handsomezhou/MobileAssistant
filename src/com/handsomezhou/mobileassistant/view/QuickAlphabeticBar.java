@@ -14,11 +14,7 @@ import android.widget.TextView;
 
 import com.handsomezhou.mobileassistant.R;
 
-/**
- * 
- * @author lake&handsomezhou
- * @date 2014-12-15
- */
+
 public class QuickAlphabeticBar extends View {
 	private static final String TAG="QuickAlphabeticBar";
 	public static final char DEFAULT_INDEX_CHARACTER = '#';

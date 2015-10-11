@@ -14,16 +14,17 @@ import android.widget.Toast;
 
 import com.handsomezhou.mobileassistant.R;
 import com.handsomezhou.mobileassistant.helper.ContactsHelper;
-import com.handsomezhou.mobileassistant.helper.ContactsHelper.OnContactsLoad;
 import com.handsomezhou.mobileassistant.helper.ContactsIndexHelper;
 import com.handsomezhou.mobileassistant.model.Contacts;
 import com.handsomezhou.mobileassistant.util.ShareUtil;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView;
 import com.handsomezhou.mobileassistant.view.ContactsOperationView.OnContactsOperationView;
+import com.handsomezhou.mobileassistant.view.SearchBox;
+import com.handsomezhou.mobileassistant.view.SearchBox.OnSearchBox;
 
-public class ContactsQwertyFragment extends BaseFragment implements OnContactsOperationView{
+public class ContactsQwertyFragment extends BaseFragment implements OnContactsOperationView,OnSearchBox{
 	private static final String TAG="ContactsFragment";
-	private EditText mSearchEt;
+	private SearchBox mSearchBox;
 	private ContactsOperationView mContactsOperationView;
 
 
@@ -36,7 +37,8 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	@Override
 	protected View initView(LayoutInflater inflater, ViewGroup container) {
 		View view =inflater.inflate(R.layout.fragment_contacts_qwerty, container, false);
-		mSearchEt=(EditText)view.findViewById(R.id.search_edit_text);
+		mSearchBox=(SearchBox) view.findViewById(R.id.search_box);
+		mSearchBox.setOnSearchBox(this);
 		mContactsOperationView = (ContactsOperationView)view.findViewById(R.id.contacts_operation_layout);
 		mContactsOperationView.setOnContactsOperationView(this);
 		/*boolean startLoad = ContactsHelper.getInstance().startLoadContacts();
@@ -48,28 +50,16 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 
 	@Override
 	protected void initListener() {
-		mSearchEt.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-			    updateSearch(s.toString());
-			}
-		});
+		
 	}
 
+	/*start: OnSearchBox*/
+	@Override
+	public void onSearchTextChanged(String curCharacter) {
+		updateSearch(curCharacter);
+	}
+	/*end: OnSearchBox*/
+	
 	/*start:OnContactsOperationView*/
 	@Override
 	public void onListItemClick(Contacts contacts,int position){
@@ -135,8 +125,8 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
 	}
 	
 	public void updateSearch(){
-		if(null!=mSearchEt){
-			updateSearch(mSearchEt.getText().toString());
+		if(null!=mSearchBox){
+			updateSearch(mSearchBox.getSearchEtInput());
 		}
 	}
 	
@@ -155,5 +145,7 @@ public class ContactsQwertyFragment extends BaseFragment implements OnContactsOp
         }
         mContactsOperationView.updateContactsList(TextUtils.isEmpty(curCharacter));
 	}
+
+	
 
 }

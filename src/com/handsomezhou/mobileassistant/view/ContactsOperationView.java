@@ -347,5 +347,4 @@ public class ContactsOperationView extends FrameLayout implements
 
 		return;
 	}
-
 }

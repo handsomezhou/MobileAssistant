@@ -20,12 +20,6 @@ import com.handsomezhou.mobileassistant.model.Contacts;
 import com.handsomezhou.mobileassistant.model.ContactsIndex;
 
 
-
-/**
- * 
- * @author handsomezhou
- * @date 2014-12-16
- */
 public class ContactsIndexView extends LinearLayout implements OnContactsIndexAdapter{
 	private static final String TAG = "ContactsIndexView";
 
