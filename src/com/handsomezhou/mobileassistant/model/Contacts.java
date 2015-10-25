@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.pinyinsearch.model.PinyinSearchUnit;
 import com.pinyinsearch.model.PinyinUnit;
 
 public class Contacts extends BaseContacts implements Cloneable{
@@ -19,9 +20,7 @@ public class Contacts extends BaseContacts implements Cloneable{
 	}
 	private String mSortKey; // as the sort key word
 
-	private List<PinyinUnit> mNamePinyinUnits; // save the mName converted to
-												// Pinyin characters.
-
+	private PinyinSearchUnit mNamePinyinSearchUnit; // save the mName converted to PinyinSearchUnit.
 	private SearchByType mSearchByType; // Used to save the type of search
 	private StringBuffer mMatchKeywords;// Used to save the type of Match Keywords.(name or phoneNumber)
 	private int mMatchStartIndex;		//the match start  position of mMatchKeywords in original string(name or phoneNumber).
@@ -39,7 +38,7 @@ public class Contacts extends BaseContacts implements Cloneable{
 		setId(null);
 		setName(null);
 		setPhoneNumber(null);
-		setNamePinyinUnits(new ArrayList<PinyinUnit>());
+		setNamePinyinSearchUnit(new PinyinSearchUnit());
 		setSearchByType(SearchByType.SearchByNull);
 		setMatchKeywords(new StringBuffer());
 		getMatchKeywords().delete(0, getMatchKeywords().length());
@@ -58,7 +57,7 @@ public class Contacts extends BaseContacts implements Cloneable{
 		setId(id);
 		setName(name);
 		setPhoneNumber(phoneNumber);
-		setNamePinyinUnits(new ArrayList<PinyinUnit>());
+		setNamePinyinSearchUnit(new PinyinSearchUnit(name));
 		setSearchByType(SearchByType.SearchByNull);
 		setMatchKeywords(new StringBuffer());
 		getMatchKeywords().delete(0, getMatchKeywords().length());
@@ -78,7 +77,7 @@ public class Contacts extends BaseContacts implements Cloneable{
 		setName(name);
 		setPhoneNumber(phoneNumber);
 		setSortKey(sortKey);
-		setNamePinyinUnits(new ArrayList<PinyinUnit>());
+		setNamePinyinSearchUnit(new PinyinSearchUnit(name));
 		setSearchByType(SearchByType.SearchByNull);
 		setMatchKeywords(new StringBuffer());
 		getMatchKeywords().delete(0, getMatchKeywords().length());
@@ -95,10 +94,8 @@ public class Contacts extends BaseContacts implements Cloneable{
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		Contacts obj=(Contacts) super.clone();
-		obj.mNamePinyinUnits=new ArrayList<PinyinUnit>();
-		for(PinyinUnit pu:mNamePinyinUnits){
-			obj.mNamePinyinUnits.add((PinyinUnit)pu.clone());
-		}
+		
+		obj.mNamePinyinSearchUnit=(PinyinSearchUnit) mNamePinyinSearchUnit.clone();
 		obj.mSearchByType=mSearchByType;
 		obj.mMatchKeywords=new StringBuffer(mMatchKeywords);
 		obj.mNextContacts=mNextContacts;
@@ -147,14 +144,14 @@ public class Contacts extends BaseContacts implements Cloneable{
 
 
 
-	public List<PinyinUnit> getNamePinyinUnits() {
-		return mNamePinyinUnits;
+	public PinyinSearchUnit getNamePinyinSearchUnit() {
+		return mNamePinyinSearchUnit;
 	}
 
-	public void setNamePinyinUnits(List<PinyinUnit> namePinyinUnits) {
-		mNamePinyinUnits = namePinyinUnits;
+	public void setNamePinyinSearchUnit(PinyinSearchUnit namePinyinSearchUnit) {
+		mNamePinyinSearchUnit = namePinyinSearchUnit;
 	}
-	
+
 	public String getSortKey() {
 		return mSortKey;
 	}
@@ -271,7 +268,7 @@ public class Contacts extends BaseContacts implements Cloneable{
 				Contacts cs=currentContact;
 				cts=new Contacts(cs.getId(), cs.getName(),phoneNumber);
 				cts.setSortKey(cs.getSortKey());
-				cts.setNamePinyinUnits(cs.getNamePinyinUnits());// not deep copy
+				cts.setNamePinyinSearchUnit(cs.getNamePinyinSearchUnit());// not deep copy
 				cts.setFirstMultipleContacts(false);
 				cts.setHideMultipleContacts(true);
 				cts.setBelongMultipleContactsPhone(true);
