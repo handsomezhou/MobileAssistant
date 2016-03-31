@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
-        <com.handsomezhou.mobileassistant.view.BottomTabView
+        <com.handsomezhou.xcontacts.view.BottomTabView
             android:id="@+id/bottom_tab_view"
             android:layout_width="match_parent"
             android:layout_height="54dp" />
 
-        <com.handsomezhou.mobileassistant.view.BottomTabCallView
+        <com.handsomezhou.xcontacts.view.BottomTabCallView
             android:id="@+id/bottom_tab_call_view"
             android:layout_width="match_parent"
             android:layout_height="54dp"
@@ -25,7 +25,7 @@
             android:visibility="visible" />
     </FrameLayout>
 
-    <com.handsomezhou.mobileassistant.view.CustomViewPager
+    <com.handsomezhou.xcontacts.view.CustomViewPager
         android:id="@+id/custom_view_pager_address_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

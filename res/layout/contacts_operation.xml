@@ -9,13 +9,13 @@
         android:layout_height="match_parent" >
     </ListView>
 
-    <com.handsomezhou.mobileassistant.view.QuickAlphabeticBar
+    <com.handsomezhou.xcontacts.view.QuickAlphabeticBar
         android:id="@+id/quick_alphabetic_bar"
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical" />
 
-    <com.handsomezhou.mobileassistant.view.ContactsIndexView
+    <com.handsomezhou.xcontacts.view.ContactsIndexView
         android:id="@+id/contacts_index_view"
         android:layout_width="@dimen/index_view_width"
         android:layout_height="wrap_content"
